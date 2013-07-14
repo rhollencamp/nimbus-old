@@ -1,0 +1,13 @@
+.spinner-dialog .ui-dialog-titlebar {
+	display: none;
+}
+.spinner-dialog .ui-progressbar {
+	position: relative;
+}
+.spinner-dialog .progress-label {
+	position: absolute;
+	left: 5em;
+	top: 9px;
+	font-weight: bold;
+	text-shadow: 1px 1px 0 #fff;
+}

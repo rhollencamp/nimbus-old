@@ -1,9 +1,11 @@
 /*
+ * Copyright 2013 Robert Hollencamp
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author Robert Hollencamp
  */
 @Component
-public class AuthenticationHandler extends AbstractAuthenticationTargetUrlRequestHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler
+public class AuthenticationHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler
 {
+	private static final String TARGET_URL = "/passwords/";
+
+	public AuthenticationHandler()
+	{
+	}
+
 	/**
 	 * Successful login; send the redirect URL
 	 *
@@ -45,8 +52,7 @@ public class AuthenticationHandler extends AbstractAuthenticationTargetUrlReques
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
 	{
-		String url = determineTargetUrl(request, response);
-		url = ServletUriComponentsBuilder.fromContextPath(request).path(url).build().toUriString();
+		String url = ServletUriComponentsBuilder.fromContextPath(request).path(TARGET_URL).build().toUriString();
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");

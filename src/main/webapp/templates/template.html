@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:include="${_view} :: title">Waffleshop Password Manager</title>
+		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+		<link href="../static/css/smoothness/jquery-ui-1.10.3.custom.css" th:href="@{/static/css/smoothness/jquery-ui-1.10.3.custom.css}" rel="stylesheet" />
+		<script type="text/javascript" src="../static/js/jquery-1.10.1.js" th:src="@{/static/js/jquery-1.10.1.js}"></script>
+		<script type="text/javascript" src="../static/js/jquery-ui-1.10.3.js" th:src="@{/static/js/jquery-ui-1.10.3.js}"></script>
+		<link href="../static/css/global.css" th:href="@{/static/css/global.css}" rel="stylesheet" />
+	</head>
+	<body>
+		<div th:include="${_view} :: body">TODO write content</div>
+
+		<!-- spinner / please wait modal dialog -->
+		<div id="spinner" style="display: none;">
+			<div id="progressbar">
+				<div class="progress-label">Please Wait</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../static/js/global.js" th:src="@{/static/js/global.js}"></script>
+	</body>
+</html>
