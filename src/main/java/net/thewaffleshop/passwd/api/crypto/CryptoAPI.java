@@ -62,7 +62,9 @@ public class CryptoAPI
 
 			SecretKeySpec secretKey = new SecretKeySpec(tmpKey.getEncoded(), "AES");
 			return secretKey;
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		} catch (InvalidKeySpecException e) {
 			throw new RuntimeException(e);
 		}
 	}
