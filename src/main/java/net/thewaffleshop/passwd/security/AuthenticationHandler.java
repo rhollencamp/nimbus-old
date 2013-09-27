@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -52,6 +54,10 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
 	{
+		String password = request.getParameter("password");
+		TextEncryptor textEncryptor = Encryptors.text(password, "deadbeef");
+		request.getSession().setAttribute("textEncryptor", textEncryptor);
+
 		String url = ServletUriComponentsBuilder.fromContextPath(request).path(TARGET_URL).build().toUriString();
 
 		response.setStatus(HttpServletResponse.SC_OK);

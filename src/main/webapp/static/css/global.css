@@ -1,3 +1,8 @@
+html {
+	background: url('../background.jpg') no-repeat center center fixed;
+	background-size: cover;
+}
+
 .spinner-dialog .ui-dialog-titlebar {
 	display: none;
 }

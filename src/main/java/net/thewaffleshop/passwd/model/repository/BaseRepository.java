@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Robert Hollencamp
+ * Copyright 2013 rhollencamp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.thewaffleshop.passwd.api.crypto;
+package net.thewaffleshop.passwd.model.repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
-public class CryptoSettings
+@Transactional(propagation = Propagation.MANDATORY)
+public class BaseRepository<T>
 {
-	private byte[] salt;
+	@PersistenceContext
+	protected EntityManager em;
+
+	public void persist(T entity)
+	{
+		em.persist(entity);
+	}
 }

@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:security="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	<!-- detect beans in security package -->
 	<context:component-scan base-package="net.thewaffleshop.passwd.security" />
@@ -12,9 +12,14 @@
 	<!-- no security on static resources -->
 	<security:http pattern="/static/**" security="none" />
 
+	<security:authentication-manager>
+		<security:authentication-provider ref="accountAuthenticationProvider"/>
+	</security:authentication-manager>
+
 	<!-- security on all other URLs -->
 	<security:http use-expressions="true">
 		<security:intercept-url pattern="/" access="permitAll"/>
+		<security:intercept-url pattern="/register" access="permitAll" />
 		<security:intercept-url pattern="/**" access="isAuthenticated()" />
 		<security:form-login
 			login-page="/"
@@ -27,16 +32,4 @@
 			authentication-success-handler-ref="authenticationHandler"/>
 		<security:logout />
 	</security:http>
-
-	<!-- TODO use database -->
-	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:user-service>
-				<security:user name="rod" password="koala" authorities="supervisor, teller, user" />
-				<security:user name="dianne" password="emu" authorities="teller, user" />
-				<security:user name="scott" password="wombat" authorities="user" />
-				<security:user name="peter" password="opal" authorities="user" />
-			</security:user-service>
-		</security:authentication-provider>
-	</security:authentication-manager>
 </beans>
