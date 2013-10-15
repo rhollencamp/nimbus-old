@@ -16,7 +16,7 @@
 package net.thewaffleshop.passwd.model.repository;
 
 import javax.annotation.Resource;
-import javax.validation.ConstraintViolationException;
+import net.thewaffleshop.passwd.api.AccountAPI;
 import net.thewaffleshop.passwd.model.Account;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +30,9 @@ public class AccountRepositoryTest extends RepositoryTestBase
 {
 	@Resource
 	private AccountRepository accountRepository;
+
+	@Resource
+	private AccountAPI accountAPI;
 
 	@Test
 	public void testLoad()
@@ -55,7 +58,7 @@ public class AccountRepositoryTest extends RepositoryTestBase
 	{
 		Account ret = new Account();
 		ret.setUserName("userName");
-		ret.setPassword("password");
+		accountAPI.setPassword(ret, "password");
 		accountRepository.persist(ret);
 		em.flush();
 		return ret;
