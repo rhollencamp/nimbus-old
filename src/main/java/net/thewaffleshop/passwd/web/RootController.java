@@ -18,7 +18,6 @@ package net.thewaffleshop.passwd.web;
 import javax.annotation.Resource;
 import net.thewaffleshop.passwd.api.AccountAPI;
 import net.thewaffleshop.passwd.model.Account;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -33,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author Robert Hollencamp
  */
-@Controller
 @RequestMapping("/")
 public class RootController
 {

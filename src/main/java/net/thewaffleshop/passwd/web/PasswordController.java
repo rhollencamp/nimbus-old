@@ -16,7 +16,6 @@
 package net.thewaffleshop.passwd.web;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author Robert Hollencamp
  */
-@Controller
 @RequestMapping("/passwords/")
 @SessionAttributes("textEncryptor")
 public class PasswordController

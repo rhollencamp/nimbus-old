@@ -25,7 +25,6 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
@@ -33,7 +32,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author Robert Hollencamp
  */
-@Component
 public class AuthenticationHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler
 {
 	private static final String TARGET_URL = "/passwords/";

@@ -19,14 +19,12 @@ import javax.annotation.Resource;
 import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.model.repository.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
-@Component
 public class AccountAPI
 {
 	@Resource

@@ -27,7 +27,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -37,7 +36,6 @@ import org.springframework.transaction.support.TransactionTemplate;
  *
  * @author Robert Hollencamp
  */
-@Component
 public class AccountAuthenticationProvider implements AuthenticationProvider
 {
 	@Resource
