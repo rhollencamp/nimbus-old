@@ -24,7 +24,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  *
- * @author rhollencamp
+ * @author Robert Hollencamp
  */
 public class Account implements Serializable
 {
@@ -36,7 +36,21 @@ public class Account implements Serializable
 
 	@NotNull
 	@Size(min = 60, max = 60)
-	private String password;
+	private String passwordHash;
+
+	@NotNull
+	@Size(min = 44, max = 44)
+	private String secretKeyEncrypted;
+
+	@NotNull
+	@Size(min = 12, max = 12)
+	private String secretKeySalt;
+
+	@NotNull
+	@Size(min = 24, max = 24)
+	private String secretKeyIv;
+
+	private long version;
 
 	public Long getUid()
 	{
@@ -58,14 +72,54 @@ public class Account implements Serializable
 		this.userName = userName;
 	}
 
-	public String getPassword()
+	public String getPasswordHash()
 	{
-		return password;
+		return passwordHash;
 	}
 
-	public void setPassword(String password)
+	public void setPasswordHash(String hash)
 	{
-		this.password = password;
+		this.passwordHash = hash;
+	}
+
+	public long getVersion()
+	{
+		return version;
+	}
+
+	public void setVersion(long version)
+	{
+		this.version = version;
+	}
+
+	public String getSecretKeyEncrypted()
+	{
+		return secretKeyEncrypted;
+	}
+
+	public void setSecretKeyEncrypted(String secretKeyEncrypted)
+	{
+		this.secretKeyEncrypted = secretKeyEncrypted;
+	}
+
+	public String getSecretKeySalt()
+	{
+		return secretKeySalt;
+	}
+
+	public void setSecretKeySalt(String secretKeySalt)
+	{
+		this.secretKeySalt = secretKeySalt;
+	}
+
+	public String getSecretKeyIv()
+	{
+		return secretKeyIv;
+	}
+
+	public void setSecretKeyIv(String secretKeyIv)
+	{
+		this.secretKeyIv = secretKeyIv;
 	}
 
 	@Override

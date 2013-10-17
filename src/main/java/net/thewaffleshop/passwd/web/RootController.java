@@ -16,11 +16,7 @@
 package net.thewaffleshop.passwd.web;
 
 import javax.annotation.Resource;
-import net.thewaffleshop.passwd.api.AccountAPI;
-import net.thewaffleshop.passwd.model.Account;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
+import net.thewaffleshop.passwd.service.AccountService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class RootController
 {
 	@Resource
-	private AccountAPI accountAPI;
-
-	@Resource
-	private TransactionTemplate transactionTemplate;
+	private AccountService accountService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index()
@@ -51,17 +44,7 @@ public class RootController
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Object register(@RequestParam("userName") String userName, @RequestParam("password") String password)
 	{
-		final Account account = new Account();
-		account.setUserName(userName);
-		accountAPI.setPassword(account, password);
-
-		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus ts)
-			{
-				accountAPI.save(account);
-			}
-		});
+		accountService.createAccount(userName, password);
 		return "success";
 	}
 }

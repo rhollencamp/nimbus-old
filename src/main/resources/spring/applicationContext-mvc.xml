@@ -10,6 +10,8 @@
 	<bean class="net.thewaffleshop.passwd.web.PasswordController"/>
 	<bean class="net.thewaffleshop.passwd.web.RootController"/>
 
+	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+
 	<!-- use annotations to do mappings -->
 	<mvc:annotation-driven/>
 

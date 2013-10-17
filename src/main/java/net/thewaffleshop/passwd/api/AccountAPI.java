@@ -16,8 +16,9 @@
 package net.thewaffleshop.passwd.api;
 
 import javax.annotation.Resource;
+import javax.crypto.SecretKey;
 import net.thewaffleshop.passwd.model.Account;
-import net.thewaffleshop.passwd.model.repository.AccountRepository;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -31,18 +32,7 @@ public class AccountAPI
 	private PasswordEncoder passwordEncoder;
 
 	@Resource
-	private AccountRepository accountRepository;
-
-	public Account load(String userName)
-	{
-		Account ret = accountRepository.findByUserName(userName);
-		return ret;
-	}
-
-	public void save(Account account)
-	{
-		accountRepository.persist(account);
-	}
+	private EncryptionAPI encryptionAPI;
 
 	/**
 	 * Set the password for an account
@@ -53,7 +43,7 @@ public class AccountAPI
 	public void setPassword(Account account, String password)
 	{
 		String encodedPassword = passwordEncoder.encode(password);
-		account.setPassword(encodedPassword);
+		account.setPasswordHash(encodedPassword);
 	}
 
 	/**
@@ -65,6 +55,51 @@ public class AccountAPI
 	 */
 	public boolean checkPassword(Account account, String password)
 	{
-		return passwordEncoder.matches(password, account.getPassword());
+		return passwordEncoder.matches(password, account.getPasswordHash());
+	}
+
+	/**
+	 * Generate a new {@link SecretKey} for an account
+	 *
+	 * @param account
+	 * @param password
+	 */
+	public void setSecretKey(Account account, String password)
+	{
+		// do not overwrite an existing key
+		if (account.getSecretKeyEncrypted() != null) {
+			throw new IllegalStateException();
+		}
+
+		byte[] secretKey = encryptionAPI.serializeSecretKey(encryptionAPI.createSecretKey());
+
+		// encrypt the secret key
+		byte[] salt = encryptionAPI.generateSalt();
+		byte[] iv = encryptionAPI.generateIv();
+		SecretKey sk = encryptionAPI.createSecretKey(password, salt);
+		byte[] esk = encryptionAPI.encrypt(sk, iv, secretKey);
+
+		// store on account
+		account.setSecretKeyEncrypted(Base64.encodeBase64String(esk));
+		account.setSecretKeyIv(Base64.encodeBase64String(iv));
+		account.setSecretKeySalt(Base64.encodeBase64String(salt));
+	}
+
+	/**
+	 * Decrypt and return the secret key for an account
+	 *
+	 * @param account
+	 * @param password
+	 * @return
+	 */
+	public SecretKey getSecretKey(Account account, String password)
+	{
+		byte[] esk =  Base64.decodeBase64(account.getSecretKeyEncrypted());
+
+		byte[] salt = Base64.decodeBase64(account.getSecretKeySalt());
+		byte[] iv = Base64.decodeBase64(account.getSecretKeyIv());
+		SecretKey sk = encryptionAPI.createSecretKey(password, salt);
+		byte[] secretKey = encryptionAPI.decrypt(sk, iv, esk);
+		return encryptionAPI.deserializeSecretKey(secretKey);
 	}
 }

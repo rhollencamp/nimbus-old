@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 rhollencamp.
+ * Copyright 2013 Robert Hollencamp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,17 @@
  */
 package net.thewaffleshop.passwd.model.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import net.thewaffleshop.passwd.model.Secret;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
-@Transactional(propagation = Propagation.MANDATORY)
-public abstract class BaseRepository<T>
+public class SecretRepository extends BaseRepository<Secret>
 {
-	private final Class<T> clss;
-
-	@PersistenceContext
-	protected EntityManager em;
-
-	protected BaseRepository(Class clss)
+	public SecretRepository()
 	{
-		this.clss = clss;
-	}
-
-	public void persist(T entity)
-	{
-		em.persist(entity);
-	}
-
-	public T load(long uid)
-	{
-		T ret = em.find(clss, uid);
-		return ret;
+		super(Secret.class);
 	}
 }

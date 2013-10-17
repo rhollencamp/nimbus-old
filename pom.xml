@@ -197,9 +197,17 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.0.5.v20130815</version>
 				<configuration>
+					<jettyXml>${basedir}/src/test/resources/jetty-env.xml</jettyXml>
 					<stopPort>9966</stopPort>
 					<stopKey>foo</stopKey>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.hsqldb</groupId>
+						<artifactId>hsqldb</artifactId>
+						<version>2.3.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

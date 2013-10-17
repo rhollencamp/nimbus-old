@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Robert Hollencamp
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/dao.xml", "/spring/api.xml"})
+@ContextConfiguration(locations = {"/spring/applicationContext-jdbc-test.xml", "/spring/applicationContext-dao.xml", "/spring/applicationContext-api.xml"})
 abstract public class TestBase
 {
 }

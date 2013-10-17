@@ -11,10 +11,8 @@
 	<!-- beans -->
 	<bean class="net.thewaffleshop.passwd.model.repository.AccountRepository"/>
 
-	<!-- TODO using in-memory HSQL db for dev -->
-	<jdbc:embedded-database id="dataSource" type="HSQL">
-		<jdbc:script location="classpath:schema.sql"/>
-	</jdbc:embedded-database>
+	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
@@ -28,8 +26,5 @@
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>
 
-	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
-		<constructor-arg ref="transactionManager"/>
-	</bean>
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

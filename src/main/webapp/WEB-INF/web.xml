@@ -13,7 +13,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:spring/mvc.xml</param-value>
+			<param-value>classpath:spring/applicationContext-mvc.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -29,9 +29,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:spring/dao.xml
-			classpath:spring/api.xml
-			classpath:spring/security.xml
+			classpath:spring/applicationContext-jdbc-jndi.xml
+			classpath:spring/applicationContext-dao.xml
+			classpath:spring/applicationContext-api.xml
+			classpath:spring/applicationContext-security.xml
 		</param-value>
 	</context-param>
 
@@ -44,4 +45,12 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<!-- datasource -->
+	<resource-ref>
+		<description>Database Connection</description>
+		<res-ref-name>jdbc/pmdb</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 </web-app>

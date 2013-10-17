@@ -25,16 +25,9 @@ import net.thewaffleshop.passwd.model.Account;
  */
 public class AccountRepository extends BaseRepository<Account>
 {
-	/**
-	 * Load account by primary key
-	 *
-	 * @param uid
-	 * @return {@code null} if no account found
-	 */
-	public Account load(long uid)
+	public AccountRepository()
 	{
-		Account account = em.find(Account.class, uid);
-		return account;
+		super(Account.class);
 	}
 
 	/**

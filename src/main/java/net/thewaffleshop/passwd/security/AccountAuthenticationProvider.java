@@ -18,18 +18,12 @@ package net.thewaffleshop.passwd.security;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
-import net.thewaffleshop.passwd.api.AccountAPI;
-import net.thewaffleshop.passwd.model.Account;
+import net.thewaffleshop.passwd.service.AccountService;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 
 
 /**
@@ -39,10 +33,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class AccountAuthenticationProvider implements AuthenticationProvider
 {
 	@Resource
-	private AccountAPI accountAPI;
-
-	@Resource
-	TransactionTemplate transactionTemplate;
+	private AccountService accountService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException
@@ -50,21 +41,7 @@ public class AccountAuthenticationProvider implements AuthenticationProvider
 		final String userName = authentication.getName();
 		final String password = authentication.getCredentials().toString();
 
-		transactionTemplate.execute(new TransactionCallbackWithoutResult()
-		{
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus ts)
-			{
-				Account account = accountAPI.load(userName);
-				if (account == null) {
-					throw new UsernameNotFoundException(userName);
-				}
-
-				if (!accountAPI.checkPassword(account, password)) {
-					throw new BadCredentialsException(null);
-				}
-			}
-		});
+		accountService.authenticateUser(userName, password);
 
 		List<SimpleGrantedAuthority> auths = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 		Authentication auth = new UsernamePasswordAuthenticationToken(userName, password, auths);

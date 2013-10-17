@@ -18,10 +18,9 @@ package net.thewaffleshop.passwd.api;
 import javax.annotation.Resource;
 import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.test.TestBase;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 
 /**
@@ -40,7 +39,7 @@ public class AccountAPITest extends TestBase
 		String password = "1234";
 		accountAPI.setPassword(account, password);
 
-		assertThat("Encoded password should not equal raw password", account.getPassword(), not(equalTo(password)));
+		assertThat("Encoded password should not equal raw password", account.getPasswordHash(), not(equalTo(password)));
 		assertTrue(accountAPI.checkPassword(account, password));
 	}
 }

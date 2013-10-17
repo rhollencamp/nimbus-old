@@ -1,0 +1,16 @@
+<?xml version="1.0"  encoding="ISO-8859-1"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+	<New id="pmds" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg></Arg>
+		<Arg>jdbc/pmdb</Arg>
+		<Arg>
+			<New class="org.hsqldb.jdbc.JDBCDataSource">
+				<Set name="url">jdbc:hsqldb:file:target/pmdb/pmdb;shutdown=true</Set>
+				<Set name="user">pmdb</Set>
+				<Set name="password">pmdb</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>

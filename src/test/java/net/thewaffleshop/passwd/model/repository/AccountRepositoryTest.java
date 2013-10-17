@@ -59,6 +59,7 @@ public class AccountRepositoryTest extends RepositoryTestBase
 		Account ret = new Account();
 		ret.setUserName("userName");
 		accountAPI.setPassword(ret, "password");
+		accountAPI.setSecretKey(ret, "password");
 		accountRepository.persist(ret);
 		em.flush();
 		return ret;
