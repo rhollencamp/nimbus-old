@@ -18,6 +18,9 @@ package net.thewaffleshop.passwd.security;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.crypto.SecretKey;
+import net.thewaffleshop.passwd.api.AccountAPI;
+import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.service.AccountService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,16 +38,20 @@ public class AccountAuthenticationProvider implements AuthenticationProvider
 	@Resource
 	private AccountService accountService;
 
+	@Resource
+	private AccountAPI accountAPI;
+
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException
 	{
 		final String userName = authentication.getName();
 		final String password = authentication.getCredentials().toString();
 
-		accountService.authenticateUser(userName, password);
+		Account user = accountService.authenticateUser(userName, password);
+		SecretKey sk = accountAPI.getSecretKey(user, password);
 
 		List<SimpleGrantedAuthority> auths = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-		Authentication auth = new UsernamePasswordAuthenticationToken(userName, password, auths);
+		Authentication auth = new AccountAuthenticationToken(userName, password, auths, user, sk);
 		return auth;
 	}
 

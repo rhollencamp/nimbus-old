@@ -32,6 +32,6 @@
 			always-use-default-target="true"
 			authentication-failure-handler-ref="authenticationHandler"
 			authentication-success-handler-ref="authenticationHandler"/>
-		<security:logout />
+		<security:logout logout-url="/logOut" />
 	</security:http>
 </beans>

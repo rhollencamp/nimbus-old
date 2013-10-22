@@ -10,6 +10,7 @@
 				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 	<!-- beans -->
 	<bean class="net.thewaffleshop.passwd.model.repository.AccountRepository"/>
+	<bean class="net.thewaffleshop.passwd.model.repository.SecretRepository"/>
 
 	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>

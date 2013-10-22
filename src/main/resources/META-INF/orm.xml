@@ -49,8 +49,11 @@ limitations under the License.
 				<column name="uid" nullable="false" unique="true" updatable="false"/>
 				<generated-value/>
 			</id>
+			<basic name="encryptedTitle">
+				<column name="encrypted_title" nullable="false"/>
+			</basic>
 			<basic name="encryptedMetadata">
-				<column name="encrypted_metadata" nullable="false"/>
+				<column name="encrypted_metadata"/>
 			</basic>
 			<basic name="encryptedPassword">
 				<column name="encrypted_password" nullable="false"/>

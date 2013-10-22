@@ -16,6 +16,7 @@
 package net.thewaffleshop.passwd.model;
 
 import java.io.Serializable;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -33,6 +34,9 @@ public class Account implements Serializable
 	@NotNull
 	@Size(min = 5)
 	private String userName;
+
+	@Min(1)
+	private Long sessionTimeout;
 
 	@NotNull
 	@Size(min = 60, max = 60)

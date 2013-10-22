@@ -33,6 +33,8 @@ public class Secret
 	private Account account;
 
 	@NotNull
+	private String encryptedTitle;
+
 	private String encryptedMetadata;
 
 	@NotNull
@@ -50,6 +52,16 @@ public class Secret
 	public void setAccount(Account account)
 	{
 		this.account = account;
+	}
+
+	public String getEncryptedTitle()
+	{
+		return encryptedTitle;
+	}
+
+	public void setEncryptedTitle(String encryptedTitle)
+	{
+		this.encryptedTitle = encryptedTitle;
 	}
 
 	public String getEncryptedMetadata()

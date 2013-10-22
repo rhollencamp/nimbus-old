@@ -38,18 +38,39 @@ public class SecretAPI
 		charset = Charset.forName("UTF-8");
 	}
 
-	public void encryptPassword(Secret secret, SecretKey sk, String password)
+	public void setIv(Secret secret)
 	{
 		byte[] iv = encryptionAPI.generateIv();
+		secret.setIv(Base64.encodeBase64String(iv));
+	}
+
+	public void encryptPassword(Secret secret, SecretKey sk, String password)
+	{
+		byte[] iv = Base64.decodeBase64(secret.getIv());
 		byte[] eb = encryptionAPI.encrypt(sk, iv, password.getBytes(charset));
 		secret.setEncryptedPassword(Base64.encodeBase64String(eb));
-		secret.setIv(Base64.encodeBase64String(iv));
 	}
 
 	public String decryptPassword(Secret secret, SecretKey sk)
 	{
 		byte[] iv = Base64.decodeBase64(secret.getIv());
 		byte[] eb = Base64.decodeBase64(secret.getEncryptedPassword());
+		byte[] db = encryptionAPI.decrypt(sk, iv, eb);
+		String ret = new String(db, charset);
+		return ret;
+	}
+
+	public void encryptTitle(Secret secret, SecretKey sk, String title)
+	{
+		byte[] iv = Base64.decodeBase64(secret.getIv());
+		byte[] eb = encryptionAPI.encrypt(sk, iv, title.getBytes(charset));
+		secret.setEncryptedTitle(Base64.encodeBase64String(eb));
+	}
+
+	public String decryptTitle(Secret secret, SecretKey sk)
+	{
+		byte[] iv = Base64.decodeBase64(secret.getIv());
+		byte[] eb = Base64.decodeBase64(secret.getEncryptedTitle());
 		byte[] db = encryptionAPI.decrypt(sk, iv, eb);
 		String ret = new String(db, charset);
 		return ret;

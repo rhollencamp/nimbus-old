@@ -19,10 +19,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.encrypt.Encryptors;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -52,9 +51,11 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
 	{
-		String password = request.getParameter("password");
-		TextEncryptor textEncryptor = Encryptors.text(password, "deadbeef");
-		request.getSession().setAttribute("textEncryptor", textEncryptor);
+		AccountAuthenticationToken auth = (AccountAuthenticationToken) authentication;
+
+		HttpSession session = request.getSession();
+		session.setAttribute("account", auth.getAccount());
+		session.setAttribute("secretKey", auth.getSecretKey());
 
 		String url = ServletUriComponentsBuilder.fromContextPath(request).path(TARGET_URL).build().toUriString();
 

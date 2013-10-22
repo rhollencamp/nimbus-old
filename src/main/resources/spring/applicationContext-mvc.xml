@@ -7,7 +7,7 @@
 				http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	<!-- beans -->
-	<bean class="net.thewaffleshop.passwd.web.PasswordController"/>
+	<bean class="net.thewaffleshop.passwd.web.SecretController"/>
 	<bean class="net.thewaffleshop.passwd.web.RootController"/>
 
 	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/>

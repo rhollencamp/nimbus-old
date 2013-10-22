@@ -13,37 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.thewaffleshop.passwd.model.repository;
-
-import java.util.List;
-import net.thewaffleshop.passwd.model.Account;
-import net.thewaffleshop.passwd.model.Secret;
+package net.thewaffleshop.passwd.dto;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
-public class SecretRepository extends BaseRepository<Secret>
+public class SecretDTO
 {
-	public SecretRepository()
-	{
-		super(Secret.class);
-	}
+	public Long uid;
+	public String title;
+	public String password;
 
-	/**
-	 * Find all secrets for a given account
-	 *
-	 * @param account
-	 * @return
-	 */
-	public List<Secret> findByAccount(Account account)
-	{
-		String hql = "SELECT s FROM Secret s WHERE s.account = :account";
-		List<Secret> results = em
-				.createQuery(hql, Secret.class)
-				.setParameter("account", account)
-				.getResultList();
-		return results;
-	}
 }
