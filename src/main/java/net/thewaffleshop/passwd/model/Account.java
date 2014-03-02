@@ -32,7 +32,7 @@ public class Account implements Serializable
 	private Long uid;
 
 	@NotNull
-	@Size(min = 5)
+	@Size(min = 5, max = 255)
 	private String userName;
 
 	@Min(1)

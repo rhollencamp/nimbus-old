@@ -19,6 +19,8 @@ import javax.annotation.Resource;
 import net.thewaffleshop.passwd.api.AccountAPI;
 import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.model.repository.AccountRepository;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,7 +57,19 @@ public class AccountService
 		account.setUserName(userName);
 		accountAPI.setPassword(account, password);
 		accountAPI.setSecretKey(account, password);
-		accountRepository.persist(account);
-		return account;
+		
+		try {
+			accountRepository.persist(account);
+			return account;
+		} catch (DataIntegrityViolationException e) {
+			Throwable cause = e.getCause();
+			if (cause instanceof ConstraintViolationException) {
+				ConstraintViolationException cve = (ConstraintViolationException) cause;
+				if ("USERNAMEUNIQUE".equals(cve.getConstraintName())) {
+					throw new ReportableException("User Name Already Exists", e);
+				}
+			}
+			throw e;
+		}
 	}
 }

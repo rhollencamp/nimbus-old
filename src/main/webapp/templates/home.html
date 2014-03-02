@@ -5,135 +5,27 @@
 		<title th:fragment="title">Waffleshop Password Manager</title>
 		<style type="text/css" th:fragment="css">
 			#content {
-				width: 20em;
+				width: 500px;
 				margin-top: 20%;
 				margin-left: auto;
 				margin-right: auto;
-				padding: 1em;
 				text-align: center;
-			}
-			#content h1 {
-				margin-top: 0;
-			}
-			input {
-				width: 100%;
-			}
-			button {
-				width: 100%;
 			}
 		</style>
 		<script type="text/javascript" th:fragment="js">
-			$(function() {
-				$("#register-button").button({
-					icons: {
-						primary: 'ui-icon-person'
-					}
-				}).click(function() {
-					$("#register-dialog").dialog("open");
-				});
-
-				$("#log-in-button").button({
-					icons: {
-						primary: 'ui-icon-unlocked'
-					}
-				}).click(function() {
-					$("#log-in-dialog").dialog("open");
-				});
-
-				$("#register-dialog").dialog({
-					autoOpen: false,
-					modal: true,
-					resizable: false
-				});
-
-				$("#register-submit").button({
-				}).click(function() {
-					$.ajax("register", {
-						type: "POST",
-						data: $("#register-form").serialize(),
-						success: function(data) {
-							alert("Account created");
-						},
-						error: function(xhr, status, error) {
-							alert(status);
-							alert(error);
-						}
-					});
-				});
-
-				$("#log-in-button").button({
-				}).click(function() {
-					$("#log-in-dialog").dialog("open");
-				});
-
-				$("#log-in-dialog").dialog({
-					autoOpen: false,
-					modal: true,
-					resizable: false
-				});
-
-
-				$("#log-in-submit").button({
-				}).click(function() {
-					$.ajax("authenticate", {
-						type: "POST",
-						data: $("#log-in-form").serialize(),
-						success: function(data) {
-							if (data.success) {
-								window.location.href = data.url;
-							} else {
-								alert("Error");
-							}
-						},
-						error: function(xhr, status, error) {
-							alert(status);
-							alert(error);
-						}
-					});
+		<!--
+			Ext.onReady(function() {
+				Ext.create('Ext.app.HomePanel', {
+					renderTo: Ext.getElementById("content")
 				});
 			});
+		//-->
 		</script>
 	</head>
 
 	<body>
 		<div th:fragment="body">
-			<div id="content" class="ui-state-highlight ui-corner-all">
-				<h1>Password Manager</h1>
-				<button id="log-in-button">Log In</button><br />
-				<button id="register-button">Register</button>
-			</div>
-
-			<div id="register-dialog" title="Register">
-				<form id="register-form" action="register" method="post">
-					<p>
-						<label for="register-user-name">User Name</label><br />
-						<input type="text" id="register-user-name" name="userName" />
-					</p>
-
-					<p>
-						<label for="register-password">Password</label>
-						<input type="password" id="register-password" name="password" />
-					</p>
-				</form>
-
-				<button id="register-submit">Register</button>
-			</div>
-
-			<div id="log-in-dialog" title="Log In">
-				<form id="log-in-form" action="register" method="post">
-					<p>
-						<label for="log-in-user-name">User Name</label><br />
-						<input type="text" id="log-in-user-name" name="userName" />
-					</p>
-
-					<p>
-						<label for="log-in-password">Password</label>
-						<input type="password" id="log-in-password" name="password" />
-					</p>
-				</form>
-
-				<button id="log-in-submit">Log In</button>
-			</div>
+			<div id="content"></div>
 		</div>
 	</body>
 </html>

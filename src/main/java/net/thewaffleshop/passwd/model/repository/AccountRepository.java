@@ -17,12 +17,14 @@ package net.thewaffleshop.passwd.model.repository;
 
 import java.util.List;
 import net.thewaffleshop.passwd.model.Account;
+import org.springframework.stereotype.Repository;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
+@Repository
 public class AccountRepository extends BaseRepository<Account>
 {
 	public AccountRepository()

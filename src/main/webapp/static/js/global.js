@@ -14,94 +14,113 @@
  * limitations under the License.
  */
 
-
-$("#progressbar").progressbar({
-	value: false
-});
-$("#spinner").hide();
-$(document).ajaxStart(function() {
-	$("#spinner").dialog({
-		dialogClass: "spinner-dialog",
-		modal: true,
-		closeOnEscape: false,
-		resizable: false,
-		height: "auto",
-		minHeight: 0,
-		close: function() {
-			$(this).destroy();
+Ext.define('Ext.app.HomePanel', {
+	extend: 'Ext.panel.Panel',
+	i18n: {
+		title: '<h1>Password Manager</h1>',
+		body: 'Welcome to the password manager. TODO.',
+		logIn: 'Log In',
+		register: 'Register'
+	},
+	registerWindow: null,
+	initComponent: function() {
+		Ext.apply(this, {
+			title: this.i18n.title,
+			width: 500,
+			bodyPadding: 20,
+			items: [{
+					margin: '0 0 20 0',
+					xtype: 'component',
+					html: this.i18n.body
+				}, {
+					xtype: 'container',
+					layout: {
+						type: 'hbox',
+						pack: 'center'
+					},
+					items: [{
+							xtype: 'button',
+							scale: 'large',
+							text: this.i18n.register,
+							handler: Ext.Function.bind(this.showRegisterForm, this),
+							margins: {top: 0, right: 5, bottom: 0, left: 0}
+						}, {
+							xtype: 'button',
+							scale: 'large',
+							text: this.i18n.logIn,
+							handler: Ext.Function.bind(this.logIn, this)
+						}]
+				}]
+		});
+		this.callParent(arguments);
+	},
+	showRegisterForm: function() {
+		if (!this.registerWindow) {
+			this.registerWindow = Ext.widget('window', {
+				title: this.i18n.register,
+				closeAction: 'hide',
+				layout: 'fit',
+				resizable: false,
+				modal: true,
+				items: Ext.create('Ext.app.Register')
+			});
 		}
-	});
+		this.registerWindow.show();
+	},
+	logIn: function() {
+		alert('lolwut');
+	}
 });
-$(document).ajaxStop(function() {
-	$("#spinner").dialog("destroy");
+
+Ext.define('Ext.app.Register', {
+	extend: 'Ext.form.Panel',
+	i18n: {
+		register: 'Register',
+		userName: 'User Name',
+		password: 'Password',
+		error: 'Error',
+		completeForm: 'Please complete the registration form'
+	},
+	initComponent: function() {
+		Ext.apply(this, {
+			closeAction: 'hide',
+			border: false,
+			bodyPadding: 10,
+			url: 'register',
+			items: [{
+					fieldLabel: this.i18n.userName,
+					xtype: 'textfield',
+					name: 'userName',
+					allowBlank: false
+				}, {
+					fieldLabel: this.i18n.password,
+					xtype: 'textfield',
+					name: 'password',
+					allowBlank: false
+				}],
+			buttons: [{
+					text: this.i18n.register,
+					handler: Ext.Function.bind(this.logIn, this)
+				}]
+		});
+		this.callParent(arguments);
+	},
+	logIn: function() {
+		var form = this.getForm();
+		if (form.isValid()) {
+			this.getForm().submit({
+				success: Ext.Function.bind(this.logInSuccess, this),
+				failure: Ext.Function.bind(this.logInFailure, this)
+			});
+		} else {
+			Ext.Msg.alert(this.i18n.error, this.i18n.completeForm);
+		}
+	},
+	logInSuccess: function(form, action) {
+		this.up().close();
+		Ext.Msg.alert(this.i18n.register, 'Account created successfully');
+	},
+	logInFailure: function(form, action) {
+		Ext.Msg.alert(this.i18n.error, 'An error occured creating your account');
+	}
 });
-
-/**
- * http://stackoverflow.com/questions/1184624/convert-form-data-to-js-object-with-jquery
- */
-(function($){
-    $.fn.serializeObject = function(){
-
-        var self = this,
-            json = {},
-            push_counters = {},
-            patterns = {
-                "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
-                "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
-                "push":     /^$/,
-                "fixed":    /^\d+$/,
-                "named":    /^[a-zA-Z0-9_]+$/
-            };
-
-
-        this.build = function(base, key, value){
-            base[key] = value;
-            return base;
-        };
-
-        this.push_counter = function(key){
-            if(push_counters[key] === undefined){
-                push_counters[key] = 0;
-            }
-            return push_counters[key]++;
-        };
-
-        $.each($(this).serializeArray(), function(){
-
-            // skip invalid keys
-            if(!patterns.validate.test(this.name)){
-                return;
-            }
-
-            var k,
-                keys = this.name.match(patterns.key),
-                merge = this.value,
-                reverse_key = this.name;
-
-            while((k = keys.pop()) !== undefined){
-
-                // adjust reverse_key
-                reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
-
-                // push
-                if(k.match(patterns.push)){
-                    merge = self.build([], self.push_counter(reverse_key), merge);
-                }
-
-                // fixed
-                else if(k.match(patterns.fixed)){
-                    merge = self.build([], k, merge);
-                }
-
-                // named
-                else if(k.match(patterns.named)){
-                    merge = self.build({}, k, merge);
-                }
-            }
-
-            json = $.extend(true, json, merge);
-        });
-
-        return json;
-    };
-})(jQuery);

@@ -6,7 +6,8 @@ CREATE TABLE account (
 	secret_key_salt CHAR(12) NOT NULL,
 	secret_key_iv CHAR(24) NOT NULL,
 	version INTEGER NOT NULL,
-	PRIMARY KEY (uid)
+	PRIMARY KEY (uid),
+	CONSTRAINT USERNAMEUNIQUE UNIQUE (user_name)
 );
 
 CREATE TABLE secret (
