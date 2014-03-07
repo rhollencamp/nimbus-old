@@ -40,7 +40,8 @@ public class AccountService
 	private AccountRepository accountRepository;
 
 	@Transactional(readOnly = true)
-	public Account authenticateUser(String userName, String password) throws AuthenticationException {
+	public Account authenticateUser(String userName, String password) throws AuthenticationException
+	{
 		Account account = accountRepository.findByUserName(userName);
 		if (account == null) {
 			throw new UsernameNotFoundException(null);
@@ -52,12 +53,13 @@ public class AccountService
 	}
 
 	@Transactional
-	public Account createAccount(String userName, String password) {
+	public Account createAccount(String userName, String password)
+	{
 		Account account = new Account();
 		account.setUserName(userName);
 		accountAPI.setPassword(account, password);
 		accountAPI.setSecretKey(account, password);
-		
+
 		try {
 			accountRepository.persist(account);
 			return account;
@@ -66,7 +68,7 @@ public class AccountService
 			if (cause instanceof ConstraintViolationException) {
 				ConstraintViolationException cve = (ConstraintViolationException) cause;
 				if ("USERNAMEUNIQUE".equals(cve.getConstraintName())) {
-					throw new ReportableException("User Name Already Exists", e);
+					throw new ReportableFieldException("userName", "User name already in use", e);
 				}
 			}
 			throw e;

@@ -13,43 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.thewaffleshop.passwd.web;
-
-import java.util.HashMap;
-import java.util.Map;
+package net.thewaffleshop.passwd.service;
 
 
 /**
  *
  * @author Robert Hollencamp
  */
-public class ExtAjaxResponse
+public class ReportableFieldException extends ReportableException
 {
-	public boolean success;
-	public String msg;
-	public Map<String, String> errors;
+	private final String field;
 
-	public ExtAjaxResponse()
+	public ReportableFieldException(String field, String message)
 	{
+		// @todo use a message formatter
+		super(message);
+
+		this.field = field;
 	}
 
-	public ExtAjaxResponse(boolean success)
+	public ReportableFieldException(String field, String message, Throwable cause)
 	{
-		this.success = success;
+		// @todo use a message formatter
+		super(message, cause);
+
+		this.field = field;
 	}
 
-	public ExtAjaxResponse(boolean success, String fieldName, String fieldError)
+	public String getField()
 	{
-		this.success = success;
-		errors = new HashMap<>(1);
-		errors.put(fieldName, fieldError);
-	}
-
-	public void addFieldError(String field, String message)
-	{
-		if (errors == null) {
-			errors = new HashMap<>();
-		}
-		errors.put(field, message);
+		return field;
 	}
 }

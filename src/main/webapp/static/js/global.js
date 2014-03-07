@@ -23,6 +23,7 @@ Ext.define('Ext.app.HomePanel', {
 		register: 'Register'
 	},
 	registerWindow: null,
+	logInWindow: null,
 	initComponent: function() {
 		Ext.apply(this, {
 			title: this.i18n.title,
@@ -68,7 +69,17 @@ Ext.define('Ext.app.HomePanel', {
 		this.registerWindow.show();
 	},
 	logIn: function() {
-		alert('lolwut');
+		if (!this.logInWindow) {
+			this.logInWindow = Ext.widget('window', {
+				title: this.i18n.logIn,
+				closeAction: 'hide',
+				layout: 'fit',
+				resizable: false,
+				modal: true,
+				items: Ext.create('Ext.app.LogIn')
+			});
+		}
+		this.logInWindow.show();
 	}
 });
 
@@ -79,7 +90,8 @@ Ext.define('Ext.app.Register', {
 		userName: 'User Name',
 		password: 'Password',
 		error: 'Error',
-		completeForm: 'Please complete the registration form'
+		completeForm: 'Please complete the form',
+		registerSuccessful: 'Account created'
 	},
 	initComponent: function() {
 		Ext.apply(this, {
@@ -91,15 +103,73 @@ Ext.define('Ext.app.Register', {
 					fieldLabel: this.i18n.userName,
 					xtype: 'textfield',
 					name: 'userName',
-					allowBlank: false
+					allowBlank: false,
+					msgTarget: 'side'
 				}, {
 					fieldLabel: this.i18n.password,
 					xtype: 'textfield',
 					name: 'password',
-					allowBlank: false
+					allowBlank: false,
+					msgTarget: 'side'
 				}],
 			buttons: [{
 					text: this.i18n.register,
+					handler: Ext.Function.bind(this.register, this)
+				}]
+		});
+		this.callParent(arguments);
+	},
+	register: function() {
+		var form = this.getForm();
+		if (form.isValid()) {
+			this.getForm().submit({
+				success: Ext.Function.bind(this.registerSuccess, this),
+				failure: Ext.Function.bind(this.registerFailure, this)
+			});
+		} else {
+			Ext.Msg.alert(this.i18n.error, this.i18n.completeForm);
+		}
+	},
+	registerSuccess: function(form, action) {
+		form.reset();
+		this.up().close();
+		Ext.Msg.alert(this.i18n.register, this.i18n.registerSuccessful);
+	},
+	registerFailure: function(form, action) {
+		Ext.Msg.alert(this.i18n.error, 'An error occured creating your account');
+	}
+});
+
+Ext.define('Ext.app.LogIn', {
+	extend: 'Ext.form.Panel',
+	i18n: {
+		error: 'Error',
+		completeForm: 'You must enter all required fields',
+		logIn: 'Log In',
+		userName: 'User Name',
+		password: 'Password'
+	},
+	initComponent: function() {
+		Ext.apply(this, {
+			closeAction: 'hide',
+			border: false,
+			bodyPadding: 10,
+			url: 'authenticate',
+			items: [{
+					fieldLabel: this.i18n.userName,
+					xtype: 'textfield',
+					name: 'userName',
+					allowBlank: false,
+					msgTarget: 'side'
+				}, {
+					fieldLabel: this.i18n.password,
+					xtype: 'textfield',
+					name: 'password',
+					allowBlank: false,
+					msgTarget: 'side'
+				}],
+			buttons: [{
+					text: this.i18n.logIn,
 					handler: Ext.Function.bind(this.logIn, this)
 				}]
 		});
@@ -117,10 +187,9 @@ Ext.define('Ext.app.Register', {
 		}
 	},
 	logInSuccess: function(form, action) {
-		this.up().close();
-		Ext.Msg.alert(this.i18n.register, 'Account created successfully');
+		window.location.href = action.result.url;
 	},
 	logInFailure: function(form, action) {
-		Ext.Msg.alert(this.i18n.error, 'An error occured creating your account');
+		Ext.Msg.alert(this.i18n.error, 'An error occured while logging in');
 	}
 });

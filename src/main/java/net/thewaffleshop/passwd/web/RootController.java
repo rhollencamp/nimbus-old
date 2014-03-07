@@ -18,6 +18,7 @@ package net.thewaffleshop.passwd.web;
 import javax.annotation.Resource;
 import net.thewaffleshop.passwd.service.AccountService;
 import net.thewaffleshop.passwd.service.ReportableException;
+import net.thewaffleshop.passwd.service.ReportableFieldException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,11 +46,19 @@ public class RootController
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Object register(@RequestParam("userName") String userName, @RequestParam("password") String password)
 	{
+		ExtAjaxResponse response = new ExtAjaxResponse();
+
 		try {
 			accountService.createAccount(userName, password);
-			return new ExtAjaxResponse(true);
+			response.success = true;
+		} catch (ReportableFieldException e) {
+			response.success = false;
+			response.addFieldError(e.getField(), e.getMessage());
 		} catch (ReportableException e) {
-			return new ExtAjaxResponse(false, "userName", e.getMessage());
+			response.success = false;
+			response.msg = e.getMessage();
 		}
+
+		return response;
 	}
 }
