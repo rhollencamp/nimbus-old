@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -61,7 +62,7 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");
-		response.getWriter().write("{\"success\": true, \"url\": \"" + url + "\"}");
+		response.getWriter().write("{\"success\": true, \"url\": \"" + StringEscapeUtils.escapeJavaScript(url) + "\"}");
 	}
 
 	/**
@@ -76,8 +77,10 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException
 	{
+		String msg = exception.getMessage();
+
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");
-		response.getWriter().write("{\"success\": false}");
+		response.getWriter().write("{\"success\": false, \"msg\": \"" + StringEscapeUtils.escapeJavaScript(msg) + "\"}");
 	}
 }

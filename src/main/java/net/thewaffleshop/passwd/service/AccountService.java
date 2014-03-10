@@ -16,10 +16,10 @@
 package net.thewaffleshop.passwd.service;
 
 import javax.annotation.Resource;
+import javax.validation.ConstraintViolation;
 import net.thewaffleshop.passwd.api.AccountAPI;
 import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.model.repository.AccountRepository;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -44,10 +44,10 @@ public class AccountService
 	{
 		Account account = accountRepository.findByUserName(userName);
 		if (account == null) {
-			throw new UsernameNotFoundException(null);
+			throw new UsernameNotFoundException("Authentication failed; check your username and password");
 		}
 		if (!accountAPI.checkPassword(account, password)) {
-			throw new BadCredentialsException(null);
+			throw new BadCredentialsException("Authentication failed; check your username and password");
 		}
 		return account;
 	}
@@ -63,10 +63,17 @@ public class AccountService
 		try {
 			accountRepository.persist(account);
 			return account;
+		} catch (javax.validation.ConstraintViolationException e) {
+			// @todo ability to throw all violations in one exception...ReportableFieldsException mebe?
+			for (ConstraintViolation cv : e.getConstraintViolations()) {
+				throw new ReportableFieldException(cv.getPropertyPath().toString(), cv.getMessage());
+			}
+			throw e;
 		} catch (DataIntegrityViolationException e) {
+			// determine if this was caused by username unique constraint
 			Throwable cause = e.getCause();
-			if (cause instanceof ConstraintViolationException) {
-				ConstraintViolationException cve = (ConstraintViolationException) cause;
+			if (cause instanceof org.hibernate.exception.ConstraintViolationException) {
+				org.hibernate.exception.ConstraintViolationException cve = (org.hibernate.exception.ConstraintViolationException) cause;
 				if ("USERNAMEUNIQUE".equals(cve.getConstraintName())) {
 					throw new ReportableFieldException("userName", "User name already in use", e);
 				}

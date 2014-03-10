@@ -25,5 +25,4 @@ public class SecretDTO
 	public Long uid;
 	public String title;
 	public String password;
-
 }

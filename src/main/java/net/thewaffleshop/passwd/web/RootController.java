@@ -53,6 +53,7 @@ public class RootController
 			response.success = true;
 		} catch (ReportableFieldException e) {
 			response.success = false;
+			response.msg = "Please correct all field errors";
 			response.addFieldError(e.getField(), e.getMessage());
 		} catch (ReportableException e) {
 			response.success = false;

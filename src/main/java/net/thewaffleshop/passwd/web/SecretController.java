@@ -54,9 +54,7 @@ public class SecretController
 			@ModelAttribute("account") Account account,
 			@ModelAttribute("secretKey") SecretKey secretKey)
 	{
-		List<SecretDTO> secrets = secretService.listSecrets(account, secretKey);
 		TemplatedModelAndView mav = new TemplatedModelAndView("passwords");
-		mav.addObject("secrets", secrets);
 		return mav;
 	}
 
@@ -77,5 +75,15 @@ public class SecretController
 			LOG.error("Exception saving secret", e);
 			return new AjaxResponse(false);
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public Object list(
+			@ModelAttribute("account") Account account,
+			@ModelAttribute("secretKey") SecretKey secretKey)
+	{
+		List<SecretDTO> secrets = secretService.listSecrets(account, secretKey);
+		return secrets;
 	}
 }
