@@ -66,6 +66,17 @@ public class SecretService
 		return ret;
 	}
 
+	@Transactional
+	public SecretDTO loadSecret(Account account, SecretKey secretKey, long uid)
+	{
+		Secret secret = secretRepository.load(uid);
+		SecretDTO ret = new SecretDTO();
+		ret.uid = uid;
+		ret.title = secretAPI.decryptTitle(secret, secretKey);
+		ret.password = secretAPI.decryptPassword(secret, secretKey);
+		return ret;
+	}
+
 	private Secret getSecret(Account account, SecretDTO secretDTO)
 	{
 		Secret secret;
@@ -74,8 +85,7 @@ public class SecretService
 			if (!account.equals(secret.getAccount())) {
 				throw new IllegalStateException();
 			}
-		}
-		else {
+		} else {
 			secret = new Secret();
 			secret.setAccount(account);
 			secretAPI.setIv(secret);

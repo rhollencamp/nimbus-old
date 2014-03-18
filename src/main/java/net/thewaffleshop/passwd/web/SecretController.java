@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,7 +48,7 @@ public class SecretController
 	private SecretService secretService;
 
 	/*
-	 * List secrets
+	 * Show secrest page
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(
@@ -77,13 +78,28 @@ public class SecretController
 		}
 	}
 
+	/*
+	 * List secrets
+	 */
 	@ResponseBody
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public Object list(
+	public List<SecretDTO> list(
 			@ModelAttribute("account") Account account,
 			@ModelAttribute("secretKey") SecretKey secretKey)
 	{
 		List<SecretDTO> secrets = secretService.listSecrets(account, secretKey);
 		return secrets;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "view", method = RequestMethod.GET)
+	public ExtAjaxResponse view(
+			@ModelAttribute("account") Account account,
+			@ModelAttribute("secretKey") SecretKey secretKey,
+			@RequestParam("uid") long uid)
+	{
+		ExtAjaxResponse response = new ExtAjaxResponse(true);
+		response.data = secretService.loadSecret(account, secretKey, uid);
+		return response;
 	}
 }

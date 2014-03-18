@@ -7,3 +7,11 @@ html {
 body, .x-body {
 	background: none;
 }
+
+.icon-add {
+	background-image: url(../icons/add.png) !important;
+}
+
+.icon-lock {
+	background-image: url(../icons/lock.png) !important;
+}

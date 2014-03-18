@@ -28,14 +28,17 @@ Ext.apply(Ext.form.field.VTypes, {
 
 Ext.define('Ext.app.HomePanel', {
 	extend: 'Ext.panel.Panel',
+
 	i18n: {
 		title: '<h1>Password Manager</h1>',
 		body: 'Welcome to the password manager. TODO.',
 		logIn: 'Log In',
 		register: 'Register'
 	},
+
 	registerWindow: null,
 	logInWindow: null,
+
 	initComponent: function() {
 		Ext.apply(this, {
 			title: this.i18n.title,
@@ -66,6 +69,7 @@ Ext.define('Ext.app.HomePanel', {
 		});
 		this.callParent(arguments);
 	},
+
 	showRegisterForm: function() {
 		if (!this.registerWindow) {
 			this.registerWindow = Ext.widget('window', {
@@ -79,6 +83,7 @@ Ext.define('Ext.app.HomePanel', {
 		}
 		this.registerWindow.show();
 	},
+
 	logIn: function() {
 		if (!this.logInWindow) {
 			this.logInWindow = Ext.widget('window', {
@@ -96,16 +101,26 @@ Ext.define('Ext.app.HomePanel', {
 
 Ext.define('Ext.app.Register', {
 	extend: 'Ext.form.Panel',
+
 	i18n: {
-		register: 'Register',
-		userName: 'User Name',
-		password: 'Password',
-		confirmPassword: 'Confirm Password',
-		error: 'Error',
-		completeForm: 'Please complete the form',
-		registerSuccessful: 'Account created',
-		errorMsg: 'An unexpected error occured'
+		field: {
+			userName: 'User Name',
+			password: 'Password',
+			confirmPassword: 'Confirm Password'
+		},
+		button: {
+			register: 'Register'
+		},
+		title: {
+			error: 'Error'
+		},
+		message: {
+			completeForm: 'Please complete the form',
+			registerSuccessful: 'Account created',
+			unexpectedError: 'An unexpected error occured'
+		}
 	},
+
 	initComponent: function() {
 		Ext.apply(this, {
 			closeAction: 'hide',
@@ -118,31 +133,32 @@ Ext.define('Ext.app.Register', {
 				allowBlank: false
 			},
 			items: [{
-					fieldLabel: this.i18n.userName,
+					fieldLabel: this.i18n.field.userName,
 					xtype: 'textfield',
 					name: 'userName',
 					minLength: 5,
 					maxLength: 255
 				}, {
-					fieldLabel: this.i18n.password,
+					fieldLabel: this.i18n.field.password,
 					xtype: 'textfield',
 					inputType: 'password',
 					id: 'password',
 					name: 'password'
 				}, {
-					fieldLabel: this.i18n.confirmPassword,
+					fieldLabel: this.i18n.field.confirmPassword,
 					xtype: 'textfield',
 					inputType: 'password',
 					vtype: 'password',
 					initialPassField: 'password'
 				}],
 			buttons: [{
-					text: this.i18n.register,
+					text: this.i18n.button.register,
 					handler: Ext.Function.bind(this.register, this)
 				}]
 		});
 		this.callParent(arguments);
 	},
+
 	register: function() {
 		var form = this.getForm();
 		if (form.isValid()) {
@@ -151,18 +167,20 @@ Ext.define('Ext.app.Register', {
 				failure: Ext.Function.bind(this.registerFailure, this)
 			});
 		} else {
-			Ext.Msg.alert(this.i18n.error, this.i18n.completeForm);
+			Ext.Msg.alert(this.i18n.title.error, this.i18n.message.completeForm);
 		}
 	},
+
 	registerSuccess: function(form, action) {
 		form.reset();
 		this.up().close();
-		Ext.Msg.alert(this.i18n.register, this.i18n.registerSuccessful);
+		Ext.Msg.alert(this.i18n.message.register, this.i18n.message.registerSuccessful);
 	},
+
 	registerFailure: function(form, action) {
-		var msg = action.result.msg ? action.result.msg : this.i18n.errorMsg;
+		var msg = action.result.msg ? action.result.msg : this.i18n.message.unexpectedError;
 		Ext.Msg.show({
-			title: this.i18n.error,
+			title: this.i18n.title.error,
 			msg: msg,
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
@@ -172,6 +190,7 @@ Ext.define('Ext.app.Register', {
 
 Ext.define('Ext.app.LogIn', {
 	extend: 'Ext.form.Panel',
+
 	i18n: {
 		error: 'Error',
 		completeForm: 'You must enter all required fields',
@@ -180,6 +199,7 @@ Ext.define('Ext.app.LogIn', {
 		password: 'Password',
 		errorMsg: 'An unexpected error occured'
 	},
+
 	initComponent: function() {
 		Ext.apply(this, {
 			closeAction: 'hide',
@@ -207,6 +227,7 @@ Ext.define('Ext.app.LogIn', {
 		});
 		this.callParent(arguments);
 	},
+
 	logIn: function() {
 		var form = this.getForm();
 		if (form.isValid()) {
@@ -218,11 +239,16 @@ Ext.define('Ext.app.LogIn', {
 			Ext.Msg.alert(this.i18n.error, this.i18n.completeForm);
 		}
 	},
+
 	logInSuccess: function(form, action) {
 		window.location.href = action.result.url;
 	},
+
 	logInFailure: function(form, action) {
-		var msg = action.result.msg ? action.result.msg : this.i18n.errorMsg;
+		var msg = this.i18n.errorMsg;
+		if (action.result && action.result.msg) {
+			msg = action.result.msg;
+		}
 		Ext.Msg.show({
 			title: this.i18n.error,
 			msg: msg,
@@ -245,33 +271,187 @@ Ext.define('Secret', {
 });
 
 
-Ext.define('Ext.app.PasswordPanel', {
-	extend: 'Ext.panel.Panel',
+Ext.define('Ext.app.EditSecret', {
+	extend: 'Ext.form.Panel',
+
 	i18n: {
-		title: '<h1>Password Manager</h1>',
-		body: 'Welcome to the password manager. TODO.'
+		field: {
+			name: 'Name',
+			password: 'Password'
+		},
+		button: {
+			save: 'Save'
+		},
+		title: {
+			error: 'Error'
+		},
+		message: {
+			completeForm: 'Please complete the form',
+			unexpectedError: 'An unexpected error occured'
+		}
 	},
+
 	initComponent: function() {
 		Ext.apply(this, {
-			title: this.i18n.title,
-			bodyPadding: 20,
+			closeAction: 'hide',
+			border: false,
+			bodyPadding: 10,
+			url: 'passwords/save',
+			fieldDefaults: {
+				msgTarget: 'under',
+				allowBlank: false
+			},
 			items: [{
-					margin: '0 0 20 0',
-					xtype: 'gridpanel',
-					columns: [{
-							text: 'Title',
-							dataIndex: 'title'
-						}],
-					store: Ext.create('Ext.data.Store', {
-						model: 'Secret',
-						proxy: {
-							type: 'ajax',
-							url: 'passwords/list'
-						},
-						autoLoad: true
-					})
+					fieldLabel: this.i18n.field.name,
+					xtype: 'textfield',
+					name: 'title',
+					minLength: 1,
+					maxLength: 255
+				}, {
+					fieldLabel: this.i18n.field.password,
+					xtype: 'textfield',
+					name: 'password'
+				}],
+			buttons: [{
+					text: this.i18n.button.save,
+					handler: Ext.Function.bind(this.save, this)
 				}]
 		});
 		this.callParent(arguments);
+	},
+
+	view: function(uid) {
+		var form = this.getForm();
+		form.load({
+			method: 'GET',
+			url: 'passwords/view',
+			params: {
+				uid: uid
+			},
+			failure: this.viewFailure
+		});
+	},
+
+	viewFailure: function(form, action) {
+		alert('FAIL');
+	},
+
+	save: function() {
+		var form = this.getForm();
+		if (form.isValid()) {
+			this.getForm().submit({
+				jsonSubmit: true,
+				success: Ext.Function.bind(this.saveSuccess, this),
+				failure: Ext.Function.bind(this.saveFailure, this)
+			});
+		} else {
+			Ext.Msg.alert(this.i18n.title.error, this.i18n.message.completeForm);
+		}
+	},
+
+	saveSuccess: function(form, action) {
+		form.reset();
+		this.up().close();
+	},
+
+	saveFailure: function(form, action) {
+		var msg = this.i18n.message.unexpectedError;
+		if (action.result && action.result.msg) {
+			msg = action.result.msg;
+		}
+		Ext.Msg.show({
+			title: this.i18n.title.error,
+			msg: msg,
+			buttons: Ext.Msg.OK,
+			icon: Ext.Msg.ERROR
+		});
+	}
+});
+
+Ext.define('Ext.app.PasswordPanel', {
+	extend: 'Ext.grid.Panel',
+
+	i18n: {
+		button: {
+			addPassword: 'Add Password',
+			logOut: 'Log Out'
+		},
+		column: {
+			name: 'Name'
+		},
+		title: {
+			addPassword: 'Add Password',
+			passwords: 'Passwords'
+		}
+	},
+
+	editPasswordWindow: null,
+
+	initComponent: function() {
+		Ext.apply(this, {
+			frame: true,
+			title: this.i18n.title.passwords,
+			dockedItems: [{
+					xtype: 'toolbar',
+					items: [{
+							iconCls: 'icon-add',
+							text: this.i18n.button.addPassword,
+							handler: Ext.Function.bind(this.addPassword, this),
+						}, '->', {
+							iconCls: 'icon-lock',
+							text: this.i18n.button.logOut,
+							handler: this.logOut
+					}]
+				}],
+			columns: [{
+					text: this.i18n.column.name,
+					dataIndex: 'title'
+				}, {
+					xtype: 'actioncolumn',
+					width: 50,
+					items: [{
+							icon: 'static/icons/unlock.png',
+							tooltip: 'View Secret',
+							handler: Ext.Function.bind(this.viewSecret, this)
+					}]
+				}],
+			store: Ext.create('Ext.data.Store', {
+				model: 'Secret',
+				proxy: {
+					type: 'ajax',
+					url: 'passwords/list'
+				},
+				autoLoad: true
+			})
+		});
+		this.callParent(arguments);
+	},
+
+	getEditSecretWindow: function() {
+		if (!this.editPasswordWindow) {
+			this.editPasswordWindow = Ext.widget('window', {
+				title: this.i18n.title.addPassword,
+				closeAction: 'hide',
+				layout: 'fit',
+				resizable: false,
+				modal: true,
+				items: Ext.create('Ext.app.EditSecret')
+			});
+		}
+		return this.editPasswordWindow;
+	},
+
+	viewSecret: function(grid, rowIndex, colIndex) {
+		var uid = grid.store.getAt(rowIndex).get('uid');
+		this.getEditSecretWindow().show();
+		this.getEditSecretWindow().child('form').view(uid);
+	},
+
+	logOut: function() {
+		window.location.href = '/logOut';
+	},
+
+	addPassword: function() {
+		this.getEditSecretWindow().show();
 	}
 });

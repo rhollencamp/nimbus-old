@@ -27,6 +27,7 @@ public class ExtAjaxResponse
 {
 	public boolean success;
 	public String msg;
+	public Object data;
 	public Map<String, String> errors;
 
 	public ExtAjaxResponse()
