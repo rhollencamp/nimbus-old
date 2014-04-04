@@ -111,9 +111,6 @@ Ext.define('Ext.app.Register', {
 		button: {
 			register: 'Register'
 		},
-		title: {
-			error: 'Error'
-		},
 		message: {
 			completeForm: 'Please complete the form',
 			registerSuccessful: 'Account created',
@@ -135,6 +132,7 @@ Ext.define('Ext.app.Register', {
 			items: [{
 					fieldLabel: this.i18n.field.userName,
 					xtype: 'textfield',
+					inputAttrTpl: 'spellcheck="false"',
 					name: 'userName',
 					minLength: 5,
 					maxLength: 255
@@ -167,20 +165,27 @@ Ext.define('Ext.app.Register', {
 				failure: Ext.Function.bind(this.registerFailure, this)
 			});
 		} else {
-			Ext.Msg.alert(this.i18n.title.error, this.i18n.message.completeForm);
+			Ext.Msg.show({
+				msg: this.i18n.message.completeForm,
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.ERROR
+			});
 		}
 	},
 
 	registerSuccess: function(form, action) {
 		form.reset();
 		this.up().close();
-		Ext.Msg.alert(this.i18n.message.register, this.i18n.message.registerSuccessful);
+		Ext.Msg.show({
+			msg: this.i18n.message.registerSuccessful,
+			buttons: Ext.Msg.OK,
+			icon: Ext.Msg.INFO
+		});
 	},
 
 	registerFailure: function(form, action) {
 		var msg = action.result.msg ? action.result.msg : this.i18n.message.unexpectedError;
 		Ext.Msg.show({
-			title: this.i18n.title.error,
 			msg: msg,
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
@@ -213,6 +218,7 @@ Ext.define('Ext.app.LogIn', {
 			items: [{
 					fieldLabel: this.i18n.userName,
 					xtype: 'textfield',
+					inputAttrTpl: 'spellcheck="false"',
 					name: 'userName'
 				}, {
 					fieldLabel: this.i18n.password,
@@ -250,7 +256,6 @@ Ext.define('Ext.app.LogIn', {
 			msg = action.result.msg;
 		}
 		Ext.Msg.show({
-			title: this.i18n.error,
 			msg: msg,
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
@@ -281,9 +286,6 @@ Ext.define('Ext.app.EditSecret', {
 		},
 		button: {
 			save: 'Save'
-		},
-		title: {
-			error: 'Error'
 		},
 		message: {
 			completeForm: 'Please complete the form',
@@ -345,7 +347,11 @@ Ext.define('Ext.app.EditSecret', {
 				failure: Ext.Function.bind(this.saveFailure, this)
 			});
 		} else {
-			Ext.Msg.alert(this.i18n.title.error, this.i18n.message.completeForm);
+			Ext.Msg.show({
+				msg: this.i18n.message.completeForm,
+				buttons: Ext.Msg.OK,
+				icon: Ext.Msg.ERROR
+			});
 		}
 	},
 
@@ -360,7 +366,6 @@ Ext.define('Ext.app.EditSecret', {
 			msg = action.result.msg;
 		}
 		Ext.Msg.show({
-			title: this.i18n.title.error,
 			msg: msg,
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
@@ -396,7 +401,7 @@ Ext.define('Ext.app.PasswordPanel', {
 					items: [{
 							iconCls: 'icon-add',
 							text: this.i18n.button.addPassword,
-							handler: Ext.Function.bind(this.addPassword, this),
+							handler: Ext.Function.bind(this.addPassword, this)
 						}, '->', {
 							iconCls: 'icon-lock',
 							text: this.i18n.button.logOut,

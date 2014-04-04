@@ -1,24 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Waffleshop Password Manager</name>
+	<name>Nimbus Password Manager</name>
 	<groupId>net.thewaffleshop</groupId>
-	<artifactId>password-manager</artifactId>
+	<artifactId>nimbus</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 
+	<organization>
+		<name>The Waffleshop</name>
+		<url>http://www.thewaffleshop.net</url>
+	</organization>
+
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
+			<name>GNU General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/gpl.html</url>
 		</license>
 	</licenses>
 
 	<scm>
-		<url>https://github.com/rhollencamp/password-manager</url>
-		<connection>scm:git:https://github.com/rhollencamp/password-manager.git</connection>
+		<url>https://github.com/rhollencamp/nimbus</url>
+		<connection>scm:git:https://github.com/rhollencamp/nimbus.git</connection>
 	</scm>
 
 	<properties>
