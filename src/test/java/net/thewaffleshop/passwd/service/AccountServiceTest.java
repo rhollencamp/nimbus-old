@@ -38,7 +38,7 @@ public class AccountServiceTest extends TestBase
 			accountService.createAccount("FOOFOO", "FOOFOO");
 			Assert.fail("Expected Exception");
 		} catch (ReportableException e) {
-			Assert.assertEquals("User Name Already Exists", e.getMessage());
+			Assert.assertEquals("User name already in use", e.getMessage());
 		}
 	}
 }

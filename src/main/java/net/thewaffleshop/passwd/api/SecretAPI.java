@@ -14,14 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package net.thewaffleshop.passwd.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import javax.annotation.Resource;
 import javax.crypto.SecretKey;
+import net.thewaffleshop.passwd.dto.SecretDTO;
 import net.thewaffleshop.passwd.model.Secret;
-import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -33,48 +35,63 @@ public class SecretAPI
 	@Resource
 	private EncryptionAPI encryptionAPI;
 
-	private final Charset charset;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public SecretAPI()
+	private static final Charset charset = Charset.forName("UTF-8");
+
+	public void encryptSecret(Secret secret, SecretKey sk, SecretDTO secretDTO)
 	{
-		charset = Charset.forName("UTF-8");
+		// serialize DTO
+		String json;
+		try {
+			json = objectMapper.writeValueAsString(secretDTO);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+		// encrypt
+		byte[] iv = getIv(secret);
+		byte[] eb = encryptionAPI.encrypt(sk, iv, json.getBytes(charset));
+		secret.setEncryptedSecret(eb);
 	}
 
-	public void setIv(Secret secret)
+	public SecretDTO decryptSecret(Secret secret, SecretKey sk)
 	{
-		byte[] iv = encryptionAPI.generateIv();
-		secret.setIv(Base64.encodeBase64String(iv));
-	}
-
-	public void encryptPassword(Secret secret, SecretKey sk, String password)
-	{
-		byte[] iv = Base64.decodeBase64(secret.getIv());
-		byte[] eb = encryptionAPI.encrypt(sk, iv, password.getBytes(charset));
-		secret.setEncryptedPassword(Base64.encodeBase64String(eb));
-	}
-
-	public String decryptPassword(Secret secret, SecretKey sk)
-	{
-		byte[] iv = Base64.decodeBase64(secret.getIv());
-		byte[] eb = Base64.decodeBase64(secret.getEncryptedPassword());
+		byte[] iv = getIv(secret);
+		byte[] eb = secret.getEncryptedSecret();
 		byte[] db = encryptionAPI.decrypt(sk, iv, eb);
-		String ret = new String(db, charset);
+
+		// de-serialize JSON
+		SecretDTO ret;
+		try {
+			String json = new String(db, charset);
+			ret = objectMapper.readValue(json, SecretDTO.class);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		// copy UID
+		ret.uid = secret.getUid();
+
 		return ret;
 	}
 
-	public void encryptTitle(Secret secret, SecretKey sk, String title)
+	/**
+	 * Get the IV for a given secret. If the secret does not have an IV set, one is generated
+	 *
+	 * @param secret
+	 * @return
+	 */
+	private byte[] getIv(Secret secret)
 	{
-		byte[] iv = Base64.decodeBase64(secret.getIv());
-		byte[] eb = encryptionAPI.encrypt(sk, iv, title.getBytes(charset));
-		secret.setEncryptedTitle(Base64.encodeBase64String(eb));
-	}
+		byte[] iv = secret.getIv();
 
-	public String decryptTitle(Secret secret, SecretKey sk)
-	{
-		byte[] iv = Base64.decodeBase64(secret.getIv());
-		byte[] eb = Base64.decodeBase64(secret.getEncryptedTitle());
-		byte[] db = encryptionAPI.decrypt(sk, iv, eb);
-		String ret = new String(db, charset);
-		return ret;
+		// generate IV if one is not set
+		if (iv == null) {
+			iv = encryptionAPI.generateIv();
+			secret.setIv(iv);
+		}
+
+		return iv;
 	}
 }

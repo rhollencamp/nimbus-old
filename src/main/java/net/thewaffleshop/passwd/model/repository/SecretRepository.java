@@ -47,4 +47,21 @@ public class SecretRepository extends BaseRepository<Secret>
 				.getResultList();
 		return results;
 	}
+
+	/**
+	 * Delete a secret
+	 *
+	 * @param account
+	 * @param uid
+	 * @return the number of records deleted
+	 */
+	public int delete(Account account, long uid)
+	{
+		String hql = "DELETE FROM Secret s WHERE s.account = :account AND s.uid = :uid";
+		int count = em.createQuery(hql)
+				.setParameter("account", account)
+				.setParameter("uid", uid)
+				.executeUpdate();
+		return count;
+	}
 }

@@ -96,7 +96,7 @@ public class EncryptionAPI
 		try {
 			KeyGenerator keyGen = KeyGenerator.getInstance("AES");
 			keyGen.init(256);
-			SecretKey key = KeyGenerator.getInstance("AES").generateKey();
+			SecretKey key = keyGen.generateKey();
 			return key;
 		} catch (GeneralSecurityException e) {
 			throw new RuntimeException(e);

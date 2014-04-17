@@ -43,16 +43,16 @@ public class Account implements Serializable
 	private String passwordHash;
 
 	@NotNull
-	@Size(min = 44, max = 44)
-	private String secretKeyEncrypted;
+	@Size(min = 48, max = 48)
+	private byte[] secretKeyEncrypted;
 
 	@NotNull
-	@Size(min = 12, max = 12)
-	private String secretKeySalt;
+	@Size(min = 8, max = 8)
+	private byte[] secretKeySalt;
 
 	@NotNull
-	@Size(min = 24, max = 24)
-	private String secretKeyIv;
+	@Size(min = 16, max = 16)
+	private byte[] secretKeyIv;
 
 	private long version;
 
@@ -96,32 +96,32 @@ public class Account implements Serializable
 		this.version = version;
 	}
 
-	public String getSecretKeyEncrypted()
+	public byte[] getSecretKeyEncrypted()
 	{
 		return secretKeyEncrypted;
 	}
 
-	public void setSecretKeyEncrypted(String secretKeyEncrypted)
+	public void setSecretKeyEncrypted(byte[] secretKeyEncrypted)
 	{
 		this.secretKeyEncrypted = secretKeyEncrypted;
 	}
 
-	public String getSecretKeySalt()
+	public byte[] getSecretKeySalt()
 	{
 		return secretKeySalt;
 	}
 
-	public void setSecretKeySalt(String secretKeySalt)
+	public void setSecretKeySalt(byte[] secretKeySalt)
 	{
 		this.secretKeySalt = secretKeySalt;
 	}
 
-	public String getSecretKeyIv()
+	public byte[] getSecretKeyIv()
 	{
 		return secretKeyIv;
 	}
 
-	public void setSecretKeyIv(String secretKeyIv)
+	public void setSecretKeyIv(byte[] secretKeyIv)
 	{
 		this.secretKeyIv = secretKeyIv;
 	}

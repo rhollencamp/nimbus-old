@@ -32,12 +32,15 @@ limitations under the License.
 			</basic>
 			<basic name="secretKeyEncrypted">
 				<column name="secret_key" nullable="false"/>
+				<lob/>
 			</basic>
 			<basic name="secretKeySalt">
 				<column name="secret_key_salt" nullable="false"/>
+				<lob/>
 			</basic>
 			<basic name="secretKeyIv">
 				<column name="secret_key_iv" nullable="false"/>
+				<lob/>
 			</basic>
 			<version name="version"/>
 		</attributes>
@@ -49,17 +52,13 @@ limitations under the License.
 				<column name="uid" nullable="false" unique="true" updatable="false"/>
 				<generated-value/>
 			</id>
-			<basic name="encryptedTitle">
-				<column name="encrypted_title" nullable="false"/>
-			</basic>
-			<basic name="encryptedMetadata">
-				<column name="encrypted_metadata"/>
-			</basic>
-			<basic name="encryptedPassword">
-				<column name="encrypted_password" nullable="false"/>
+			<basic name="encryptedSecret">
+				<column name="encrypted_secret" nullable="false"/>
+				<lob/>
 			</basic>
 			<basic name="iv">
 				<column name="iv" nullable="false"/>
+				<lob/>
 			</basic>
 			<version name="version"/>
 			<many-to-one name="account" fetch="LAZY">

@@ -114,7 +114,8 @@ Ext.define('Ext.app.Register', {
 		message: {
 			completeForm: 'Please complete the form',
 			registerSuccessful: 'Account created',
-			unexpectedError: 'An unexpected error occured'
+			unexpectedError: 'An unexpected error occured',
+			processing: 'Processing...'
 		}
 	},
 
@@ -161,6 +162,7 @@ Ext.define('Ext.app.Register', {
 		var form = this.getForm();
 		if (form.isValid()) {
 			this.getForm().submit({
+				waitMsg: this.i18n.message.processing,
 				success: Ext.Function.bind(this.registerSuccess, this),
 				failure: Ext.Function.bind(this.registerFailure, this)
 			});
@@ -197,6 +199,9 @@ Ext.define('Ext.app.LogIn', {
 	extend: 'Ext.form.Panel',
 
 	i18n: {
+		message: {
+			processing: 'Processing...'
+		},
 		error: 'Error',
 		completeForm: 'You must enter all required fields',
 		logIn: 'Log In',
@@ -238,6 +243,7 @@ Ext.define('Ext.app.LogIn', {
 		var form = this.getForm();
 		if (form.isValid()) {
 			this.getForm().submit({
+				waitMsg: this.i18n.message.processing,
 				success: Ext.Function.bind(this.logInSuccess, this),
 				failure: Ext.Function.bind(this.logInFailure, this)
 			});
@@ -265,14 +271,14 @@ Ext.define('Ext.app.LogIn', {
 
 Ext.define('Secret', {
 	extend: 'Ext.data.Model',
+	idProperty: 'uid',
 	fields: [{
 			name: 'uid',
 			type: 'int'
 		}, {
 			name: 'title',
 			type: 'string'
-		}],
-	idProperty: 'uid'
+		}]
 });
 
 
@@ -358,6 +364,7 @@ Ext.define('Ext.app.EditSecret', {
 	saveSuccess: function(form, action) {
 		form.reset();
 		this.up().close();
+		Ext.data.StoreManager.lookup('secretStore').load();
 	},
 
 	saveFailure: function(form, action) {
@@ -395,6 +402,7 @@ Ext.define('Ext.app.PasswordPanel', {
 	initComponent: function() {
 		Ext.apply(this, {
 			frame: true,
+			minHeight: 500,
 			title: this.i18n.title.passwords,
 			dockedItems: [{
 					xtype: 'toolbar',
@@ -418,15 +426,24 @@ Ext.define('Ext.app.PasswordPanel', {
 							icon: 'static/icons/unlock.png',
 							tooltip: 'View Secret',
 							handler: Ext.Function.bind(this.viewSecret, this)
+						}, {
+							icon: 'static/icons/delete.png',
+							tooltip: 'Delete Secret',
+							handler: Ext.Function.bind(this.deleteSecret, this)
 					}]
 				}],
 			store: Ext.create('Ext.data.Store', {
+				storeId: 'secretStore',
 				model: 'Secret',
 				proxy: {
 					type: 'ajax',
+					api: {
+						destroy: 'passwords/delete'
+					},
 					url: 'passwords/list'
 				},
-				autoLoad: true
+				autoLoad: true,
+				autoSync: true
 			})
 		});
 		this.callParent(arguments);
@@ -458,5 +475,9 @@ Ext.define('Ext.app.PasswordPanel', {
 
 	addPassword: function() {
 		this.getEditSecretWindow().show();
+	},
+
+	deleteSecret: function(grid, rowIndex, colIndex) {
+		grid.store.removeAt(rowIndex);
 	}
 });

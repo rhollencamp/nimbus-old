@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.crypto.SecretKey;
 import net.thewaffleshop.passwd.dto.SecretDTO;
 import net.thewaffleshop.passwd.model.Account;
+import net.thewaffleshop.passwd.service.ReportableException;
 import net.thewaffleshop.passwd.service.SecretService;
 import net.thewaffleshop.passwd.web.ajax.AjaxResponse;
 import org.slf4j.Logger;
@@ -49,7 +50,7 @@ public class SecretController
 	private SecretService secretService;
 
 	/*
-	 * Show secrest page
+	 * Show secrets page
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(
@@ -77,6 +78,29 @@ public class SecretController
 			LOG.error("Exception saving secret", e);
 			return new AjaxResponse(false);
 		}
+	}
+
+	/*
+	 * Delete secret
+	 */
+	@ResponseBody
+	@RequestMapping(value = "delete", method = RequestMethod.POST)
+	public ExtAjaxResponse delete(
+			@ModelAttribute("account") Account account,
+			@RequestBody SecretDTO secretDTO)
+	{
+		ExtAjaxResponse response = new ExtAjaxResponse();
+		try {
+			secretService.deleteSecret(account, secretDTO.uid);
+			response.success = true;
+		} catch (ReportableException e) {
+			response.success = false;
+			response.msg = e.getMessage();
+		} catch (Exception e) {
+			response.success = false;
+		}
+
+		return response;
 	}
 
 	/*

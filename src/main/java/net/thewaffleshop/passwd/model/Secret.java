@@ -34,16 +34,12 @@ public class Secret
 	private Account account;
 
 	@NotNull
-	private String encryptedTitle;
-
-	private String encryptedMetadata;
-
-	@NotNull
-	private String encryptedPassword;
+	@Size(min = 0, max = 1024)
+	private byte[] encryptedSecret;
 
 	@NotNull
-	@Size(min = 24, max = 24)
-	private String iv;
+	@Size(min = 16, max = 16)
+	private byte[] iv;
 
 	public Account getAccount()
 	{
@@ -55,42 +51,22 @@ public class Secret
 		this.account = account;
 	}
 
-	public String getEncryptedTitle()
+	public void setEncryptedSecret(byte[] encryptedSecret)
 	{
-		return encryptedTitle;
+		this.encryptedSecret = encryptedSecret;
 	}
 
-	public void setEncryptedTitle(String encryptedTitle)
+	public byte[] getEncryptedSecret()
 	{
-		this.encryptedTitle = encryptedTitle;
+		return encryptedSecret;
 	}
 
-	public String getEncryptedMetadata()
-	{
-		return encryptedMetadata;
-	}
-
-	public void setEncryptedMetadata(String encryptedMetadata)
-	{
-		this.encryptedMetadata = encryptedMetadata;
-	}
-
-	public String getEncryptedPassword()
-	{
-		return encryptedPassword;
-	}
-
-	public void setEncryptedPassword(String encryptedPassword)
-	{
-		this.encryptedPassword = encryptedPassword;
-	}
-
-	public String getIv()
+	public byte[] getIv()
 	{
 		return iv;
 	}
 
-	public void setIv(String iv)
+	public void setIv(byte[] iv)
 	{
 		this.iv = iv;
 	}

@@ -44,12 +44,7 @@ public class SecretService
 	public void saveSecret(Account account, SecretKey secretKey, SecretDTO secretDTO)
 	{
 		Secret secret = getSecret(account, secretDTO);
-		if (secretDTO.password != null) {
-			secretAPI.encryptPassword(secret, secretKey, secretDTO.password);
-		}
-		if (secretDTO.title != null) {
-			secretAPI.encryptTitle(secret, secretKey, secretDTO.title);
-		}
+		secretAPI.encryptSecret(secret, secretKey, secretDTO);
 		secretRepository.persist(secret);
 	}
 
@@ -59,9 +54,7 @@ public class SecretService
 		List<Secret> secrets = secretRepository.findByAccount(account);
 		ArrayList<SecretDTO> ret = new ArrayList<SecretDTO>(secrets.size());
 		for (Secret secret : secrets) {
-			SecretDTO dto = new SecretDTO();
-			dto.uid = secret.getUid();
-			dto.title = secretAPI.decryptTitle(secret, secretKey);
+			SecretDTO dto = secretAPI.decryptSecret(secret, secretKey);
 			ret.add(dto);
 		}
 		return ret;
@@ -71,11 +64,18 @@ public class SecretService
 	public SecretDTO loadSecret(Account account, SecretKey secretKey, long uid)
 	{
 		Secret secret = secretRepository.load(uid);
-		SecretDTO ret = new SecretDTO();
-		ret.uid = uid;
-		ret.title = secretAPI.decryptTitle(secret, secretKey);
-		ret.password = secretAPI.decryptPassword(secret, secretKey);
+		SecretDTO ret = secretAPI.decryptSecret(secret, secretKey);
 		return ret;
+	}
+
+	@Transactional
+	public void deleteSecret(Account account, long uid)
+	{
+		int count = secretRepository.delete(account, uid);
+		if (count == 0) {
+			// @todo i18n
+			throw new ReportableException("Secret Not Found");
+		}
 	}
 
 	private Secret getSecret(Account account, SecretDTO secretDTO)
@@ -89,7 +89,6 @@ public class SecretService
 		} else {
 			secret = new Secret();
 			secret.setAccount(account);
-			secretAPI.setIv(secret);
 		}
 		return secret;
 	}

@@ -19,7 +19,6 @@ package net.thewaffleshop.passwd.api;
 import javax.annotation.Resource;
 import javax.crypto.SecretKey;
 import net.thewaffleshop.passwd.model.Account;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -81,9 +80,9 @@ public class AccountAPI
 		byte[] esk = encryptionAPI.encrypt(sk, iv, secretKey);
 
 		// store on account
-		account.setSecretKeyEncrypted(Base64.encodeBase64String(esk));
-		account.setSecretKeyIv(Base64.encodeBase64String(iv));
-		account.setSecretKeySalt(Base64.encodeBase64String(salt));
+		account.setSecretKeyEncrypted(esk);
+		account.setSecretKeyIv(iv);
+		account.setSecretKeySalt(salt);
 	}
 
 	/**
@@ -95,10 +94,10 @@ public class AccountAPI
 	 */
 	public SecretKey getSecretKey(Account account, String password)
 	{
-		byte[] esk = Base64.decodeBase64(account.getSecretKeyEncrypted());
+		byte[] esk = account.getSecretKeyEncrypted();
 
-		byte[] salt = Base64.decodeBase64(account.getSecretKeySalt());
-		byte[] iv = Base64.decodeBase64(account.getSecretKeyIv());
+		byte[] salt = account.getSecretKeySalt();
+		byte[] iv = account.getSecretKeyIv();
 		SecretKey sk = encryptionAPI.createSecretKey(password, salt);
 		byte[] secretKey = encryptionAPI.decrypt(sk, iv, esk);
 		return encryptionAPI.deserializeSecretKey(secretKey);
