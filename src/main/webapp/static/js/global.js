@@ -30,8 +30,8 @@ Ext.define('Ext.app.HomePanel', {
 	extend: 'Ext.panel.Panel',
 
 	i18n: {
-		title: '<h1>Password Manager</h1>',
-		body: 'Welcome to the password manager. TODO.',
+		title: '<h1>Nimbus Password Manager</h1>',
+		body: 'The open source cloud password manager. Create an account or log in below',
 		logIn: 'Log In',
 		register: 'Register'
 	},

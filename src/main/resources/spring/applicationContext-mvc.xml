@@ -17,6 +17,7 @@
 
 	<!-- map a static directory that Spring will bypass -->
 	<mvc:resources mapping="/static/**" location="/static/"/>
+	<mvc:resources mapping="/favicon.ico" location="/static/favicon.ico"/>
 
 	<!-- thymeleaf view engine -->
 	<bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">

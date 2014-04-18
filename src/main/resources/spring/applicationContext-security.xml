@@ -16,13 +16,15 @@
 	</security:authentication-manager>
 
 	<!-- no security on static resources -->
-	<security:http pattern="/static/**" security="none" />
+	<security:http pattern="/static/**" security="none"/>
+	<security:http pattern="/favicon.ico" security="none"/>
 
 	<!-- security on all other URLs -->
 	<security:http use-expressions="true">
 		<security:intercept-url pattern="/" access="permitAll"/>
-		<security:intercept-url pattern="/register" access="permitAll" />
-		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+		<security:intercept-url pattern="/favicon.ico" access="permitAll"/>
+		<security:intercept-url pattern="/register" access="permitAll"/>
+		<security:intercept-url pattern="/**" access="isAuthenticated()"/>
 		<security:form-login
 			login-page="/"
 			login-processing-url="/authenticate"
@@ -32,6 +34,6 @@
 			always-use-default-target="true"
 			authentication-failure-handler-ref="authenticationHandler"
 			authentication-success-handler-ref="authenticationHandler"/>
-		<security:logout logout-url="/logOut" />
+		<security:logout logout-url="/logOut"/>
 	</security:http>
 </beans>
