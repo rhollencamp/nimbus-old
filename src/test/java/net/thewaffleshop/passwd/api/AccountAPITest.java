@@ -18,8 +18,10 @@ package net.thewaffleshop.passwd.api;
 import javax.annotation.Resource;
 import net.thewaffleshop.passwd.model.Account;
 import net.thewaffleshop.passwd.test.TestBase;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 
