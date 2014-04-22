@@ -416,7 +416,7 @@ Ext.define('Ext.app.PasswordPanel', {
 							text: this.i18n.button.addPassword,
 							handler: Ext.Function.bind(this.addSecret, this)
 						}, '->', {
-							iconCls: 'icon-lock',
+							iconCls: 'icon-log-out',
 							text: this.i18n.button.logOut,
 							handler: this.logOut
 					}]
@@ -428,11 +428,11 @@ Ext.define('Ext.app.PasswordPanel', {
 					xtype: 'actioncolumn',
 					width: 50,
 					items: [{
-							icon: 'static/icons/unlock.png',
+							icon: 'static/icons/magnifier.png',
 							tooltip: 'View Secret',
 							handler: Ext.Function.bind(this.viewSecret, this)
 						}, {
-							icon: 'static/icons/delete.png',
+							icon: 'static/icons/cross-circle.png',
 							tooltip: 'Delete Secret',
 							handler: Ext.Function.bind(this.deleteSecret, this)
 					}]

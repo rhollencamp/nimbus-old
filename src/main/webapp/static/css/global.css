@@ -9,9 +9,13 @@ body, .x-body {
 }
 
 .icon-add {
-	background-image: url(../icons/add.png) !important;
+	background-image: url(../icons/plus-circle.png) !important;
 }
 
-.icon-lock {
-	background-image: url(../icons/lock.png) !important;
+.icon-delete {
+	background-image: url(../icons/cross-circle.png) !important;
+}
+
+.icon-log-out {
+	background-image: url(../icons/control-power.png) !important;
 }
