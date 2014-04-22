@@ -278,6 +278,9 @@ Ext.define('Secret', {
 		}, {
 			name: 'title',
 			type: 'string'
+		}, {
+			name: 'password',
+			type: 'string'
 		}]
 });
 
@@ -291,7 +294,8 @@ Ext.define('Ext.app.EditSecret', {
 			password: 'Password'
 		},
 		button: {
-			save: 'Save'
+			save: 'Save',
+			showPassword: 'Show Password'
 		},
 		message: {
 			completeForm: 'Please complete the form',
@@ -310,6 +314,9 @@ Ext.define('Ext.app.EditSecret', {
 				allowBlank: false
 			},
 			items: [{
+					xtype: 'hidden',
+					name: 'uid'
+				}, {
 					fieldLabel: this.i18n.field.name,
 					xtype: 'textfield',
 					name: 'title',
@@ -317,8 +324,17 @@ Ext.define('Ext.app.EditSecret', {
 					maxLength: 255
 				}, {
 					fieldLabel: this.i18n.field.password,
-					xtype: 'textfield',
-					name: 'password'
+					xtype: 'fieldcontainer',
+					items: [{
+							xtype: 'textfield',
+							name: 'password'
+						}, {
+							xtype: 'button',
+							name: 'showPassword',
+							text: this.i18n.button.showPassword,
+							hidden: true,
+							handler: Ext.Function.bind(this.showPassword, this)
+						}]
 				}],
 			buttons: [{
 					text: this.i18n.button.save,
@@ -326,22 +342,6 @@ Ext.define('Ext.app.EditSecret', {
 				}]
 		});
 		this.callParent(arguments);
-	},
-
-	view: function(uid) {
-		var form = this.getForm();
-		form.load({
-			method: 'GET',
-			url: 'passwords/view',
-			params: {
-				uid: uid
-			},
-			failure: this.viewFailure
-		});
-	},
-
-	viewFailure: function(form, action) {
-		alert('FAIL');
 	},
 
 	save: function() {
@@ -377,6 +377,11 @@ Ext.define('Ext.app.EditSecret', {
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
 		});
+	},
+
+	showPassword: function() {
+		this.down('textfield[name=password]').show();
+		this.down('button').hide();
 	}
 });
 
@@ -409,7 +414,7 @@ Ext.define('Ext.app.PasswordPanel', {
 					items: [{
 							iconCls: 'icon-add',
 							text: this.i18n.button.addPassword,
-							handler: Ext.Function.bind(this.addPassword, this)
+							handler: Ext.Function.bind(this.addSecret, this)
 						}, '->', {
 							iconCls: 'icon-lock',
 							text: this.i18n.button.logOut,
@@ -464,17 +469,30 @@ Ext.define('Ext.app.PasswordPanel', {
 	},
 
 	viewSecret: function(grid, rowIndex, colIndex) {
-		var uid = grid.store.getAt(rowIndex).get('uid');
-		this.getEditSecretWindow().show();
-		this.getEditSecretWindow().child('form').view(uid);
+		var r = grid.store.getAt(rowIndex);
+		var w = this.getEditSecretWindow();
+		var f = w.child('form');
+
+		f.down('textfield[name=password]').hide();
+		f.down('button').show();
+		f.getForm().loadRecord(r);
+
+		w.show();
 	},
 
 	logOut: function() {
 		window.location.href = '/logOut';
 	},
 
-	addPassword: function() {
-		this.getEditSecretWindow().show();
+	addSecret: function() {
+		var w = this.getEditSecretWindow();
+		var f = w.child('form');
+
+		f.down('textfield[name=password]').show();
+		f.down('button').hide();
+		f.getForm().reset();
+
+		w.show();
 	},
 
 	deleteSecret: function(grid, rowIndex, colIndex) {
