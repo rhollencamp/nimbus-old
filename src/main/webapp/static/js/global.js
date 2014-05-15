@@ -299,7 +299,7 @@ Ext.define('Ext.app.EditSecret', {
 
 	i18n: {
 		field: {
-			name: 'Name',
+			name: 'Account',
 			url: 'URL',
 			userName: 'User Name',
 			password: 'Password',
@@ -424,7 +424,9 @@ Ext.define('Ext.app.PasswordPanel', {
 			logOut: 'Log Out'
 		},
 		column: {
-			name: 'Name'
+			name: 'Account',
+			url: 'URL',
+			userName: 'User Name'
 		},
 		title: {
 			addPassword: 'Add Password',
@@ -453,10 +455,20 @@ Ext.define('Ext.app.PasswordPanel', {
 				}],
 			columns: [{
 					text: this.i18n.column.name,
-					dataIndex: 'title'
+					dataIndex: 'title',
+					flex: 1
+				}, {
+					text: this.i18n.column.url,
+					dataIndex: 'url',
+					renderer: this.formatUrl,
+					flex: 1
+				}, {
+					text: this.i18n.column.userName,
+					dataIndex: 'userName',
+					flex: 1
 				}, {
 					xtype: 'actioncolumn',
-					width: 50,
+					width: 40, // 16 pixels per icon, 8 pixels padding
 					items: [{
 							icon: 'static/icons/magnifier.png',
 							tooltip: 'View Secret',
@@ -482,6 +494,14 @@ Ext.define('Ext.app.PasswordPanel', {
 			})
 		});
 		this.callParent(arguments);
+	},
+
+	formatUrl: function(value) {
+		var ret = value;
+		if (Ext.form.field.VTypes.url(value)) {
+			ret = '<a href="' + value + '" target="_blank">' + value + '</a>';
+		}
+		return ret;
 	},
 
 	getEditSecretWindow: function() {
