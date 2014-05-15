@@ -279,7 +279,16 @@ Ext.define('Secret', {
 			name: 'title',
 			type: 'string'
 		}, {
+			name: 'url',
+			type: 'string'
+		}, {
+			name: 'userName',
+			type: 'string'
+		}, {
 			name: 'password',
+			type: 'string'
+		}, {
+			name: 'note',
 			type: 'string'
 		}]
 });
@@ -291,7 +300,10 @@ Ext.define('Ext.app.EditSecret', {
 	i18n: {
 		field: {
 			name: 'Name',
-			password: 'Password'
+			url: 'URL',
+			userName: 'User Name',
+			password: 'Password',
+			note: 'Note'
 		},
 		button: {
 			save: 'Save',
@@ -323,6 +335,18 @@ Ext.define('Ext.app.EditSecret', {
 					minLength: 1,
 					maxLength: 255
 				}, {
+					fieldLabel: this.i18n.field.url,
+					xtype: 'textfield',
+					name: 'url',
+					minLength: 0,
+					maxLength: 255
+				}, {
+					fieldLabel: this.i18n.field.userName,
+					xtype: 'textfield',
+					name: 'userName',
+					minLength: 0,
+					maxLength: 255
+				}, {
 					fieldLabel: this.i18n.field.password,
 					xtype: 'fieldcontainer',
 					items: [{
@@ -335,6 +359,12 @@ Ext.define('Ext.app.EditSecret', {
 							hidden: true,
 							handler: Ext.Function.bind(this.showPassword, this)
 						}]
+				}, {
+					fieldLabel: this.i18n.field.note,
+					xtype: 'textareafield',
+					name: 'note',
+					minLength: 0,
+					maxLength: 2048
 				}],
 			buttons: [{
 					text: this.i18n.button.save,

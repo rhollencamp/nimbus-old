@@ -25,5 +25,8 @@ public class SecretDTO
 {
 	public Long uid;
 	public String title;
+	public String url;
+	public String userName;
 	public String password;
+	public String note;
 }
