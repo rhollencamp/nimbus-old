@@ -338,13 +338,13 @@ Ext.define('Ext.app.EditSecret', {
 					fieldLabel: this.i18n.field.url,
 					xtype: 'textfield',
 					name: 'url',
-					minLength: 0,
+					allowBlank: true,
 					maxLength: 255
 				}, {
 					fieldLabel: this.i18n.field.userName,
 					xtype: 'textfield',
 					name: 'userName',
-					minLength: 0,
+					allowBlank: true,
 					maxLength: 255
 				}, {
 					fieldLabel: this.i18n.field.password,
@@ -363,7 +363,7 @@ Ext.define('Ext.app.EditSecret', {
 					fieldLabel: this.i18n.field.note,
 					xtype: 'textareafield',
 					name: 'note',
-					minLength: 0,
+					allowBlank: true,
 					maxLength: 2048
 				}],
 			buttons: [{
