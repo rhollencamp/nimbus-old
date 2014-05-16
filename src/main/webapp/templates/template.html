@@ -11,11 +11,16 @@
 		<style type="text/css" th:include="${_view} :: css"></style>
 
 		<script type="text/javascript" src="static/extjs/ext-all-debug.js"></script>
+		<script type="text/javascript" src="static/js/ZeroClipboard.min.js"></script>
 		<script type="text/javascript" src="static/js/global.js"></script>
 		<script type="text/javascript" th:include="${_view} :: js"></script>
 		<script type="text/javascript">
-			// Path to the blank image should point to a valid location on your server
+			// ExtJS global config
 			Ext.BLANK_IMAGE_URL = 'static/extjs/resources/s.gif';
+			Ext.tip.QuickTipManager.init();
+
+			// ZeroClipboard global config
+			ZeroClipboard.config({moviePath: 'static/ZeroClipboard.swf'});
 		</script>
 	</head>
 	<body>

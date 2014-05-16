@@ -431,6 +431,11 @@ Ext.define('Ext.app.PasswordPanel', {
 		title: {
 			addPassword: 'Add Password',
 			passwords: 'Passwords'
+		},
+		tooltip: {
+			copyPassword: 'Copy Password to Clipboard',
+			viewSecret: 'View Secret',
+			deleteSecret: 'Delete Secret'
 		}
 	},
 
@@ -468,14 +473,21 @@ Ext.define('Ext.app.PasswordPanel', {
 					flex: 1
 				}, {
 					xtype: 'actioncolumn',
-					width: 40, // 16 pixels per icon, 8 pixels padding
+					width: 56, // 16 pixels per icon, 8 pixels padding
+					resizable: false,
+					menuDisabled: true,
+					hideable: false,
 					items: [{
+							clipboard: true,
+							icon: 'static/icons/document-copy.png',
+							tooltip: this.i18n.tooltip.copyPassword
+						}, {
 							icon: 'static/icons/magnifier.png',
-							tooltip: 'View Secret',
+							tooltip: this.i18n.tooltip.viewSecret,
 							handler: Ext.Function.bind(this.viewSecret, this)
 						}, {
 							icon: 'static/icons/cross-circle.png',
-							tooltip: 'Delete Secret',
+							tooltip: this.i18n.tooltip.deleteSecret,
 							handler: Ext.Function.bind(this.deleteSecret, this)
 					}]
 				}],
@@ -494,6 +506,28 @@ Ext.define('Ext.app.PasswordPanel', {
 			})
 		});
 		this.callParent(arguments);
+
+		this.getView().on('refresh', Ext.Function.bind(this.gridViewRefresh, this));
+	},
+
+	/**
+	 * When the grid view refreshes, find any copy buttons that are on the grid and set them up with ZeroClipboard
+	 *
+	 * @todo figure out a way to have the Ext QuickTips not messed up by ZeroClipboard
+	 * @param {type} gridView
+	 */
+	gridViewRefresh: function(gridView) {
+		Ext.each(Ext.query('.x-action-col-cell'), function(n) {
+			var actionCell = Ext.fly(n);
+			var copyEl = actionCell.down('img').dom;
+			if (!copyEl.hasAttribute('data-clipboard-text')) {
+				var row = actionCell.up('tr').dom;
+				var record = gridView.getRecord(row);
+				var password = record.get('password');
+				copyEl.setAttribute('data-clipboard-text', password);
+				new ZeroClipboard(copyEl);
+			}
+		});
 	},
 
 	formatUrl: function(value) {
