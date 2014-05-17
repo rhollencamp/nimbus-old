@@ -584,7 +584,13 @@ Ext.define('Ext.app.PasswordPanel', {
 		if (val === "") {
 			store.clearFilter();
 		} else {
-			store.filter('title', val);
+			store.clearFilter(true);
+			store.filter([{
+					property: 'title',
+					value: val,
+					anyMatch: true
+
+			}]);
 		}
 	},
 
