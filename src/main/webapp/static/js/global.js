@@ -26,6 +26,35 @@ Ext.apply(Ext.form.field.VTypes, {
 	passwordText: 'Passwords do not match'
 });
 
+// text field with a clear button on the right side
+Ext.define('Ext.ux.ClearableTextField', {
+	extend: 'Ext.form.field.Trigger',
+	alias: 'widget.clearabletextfield',
+	initComponent: function() {
+		Ext.apply(this, {
+			triggerCls: 'x-form-clear-trigger',
+			enableKeyEvents: true
+		});
+		this.callParent(arguments);
+
+		this.on('keydown', Ext.Function.bind(this.keyDown, this));
+	},
+
+	/*
+	 * If they press ESC, do the same thing as clicking the clear trigger
+	 */
+	keyDown: function(cmp, e) {
+		if (e.keyCode === Ext.EventObject.ESC) {
+			cmp.onTriggerClick();
+		}
+	},
+
+	onTriggerClick: function() {
+		this.setRawValue('');
+		this.fireEvent('change', this, '');
+	}
+});
+
 Ext.define('Ext.app.HomePanel', {
 	extend: 'Ext.panel.Panel',
 
@@ -448,14 +477,36 @@ Ext.define('Ext.app.PasswordPanel', {
 			title: this.i18n.title.passwords,
 			dockedItems: [{
 					xtype: 'toolbar',
+					dock: 'bottom',
+					items: [{
+							xtype: 'tbfill'
+						}, {
+							iconCls: 'icon-log-out',
+							text: this.i18n.button.logOut,
+							handler: this.logOut
+					}]
+				}, {
+					xtype: 'toolbar',
 					items: [{
 							iconCls: 'icon-add',
 							text: this.i18n.button.addPassword,
 							handler: Ext.Function.bind(this.addSecret, this)
-						}, '->', {
-							iconCls: 'icon-log-out',
-							text: this.i18n.button.logOut,
-							handler: this.logOut
+						}, {
+							xtype: 'tbfill'
+						}, {
+							xtype: 'box',
+							autoEl: {
+								tag: 'img',
+								src: 'static/icons/binocular.png'
+							}
+						}, {
+							xtype: 'clearabletextfield',
+							listeners: {
+								change: {
+									fn: Ext.Function.bind(this.filterChange, this),
+									buffer: 100
+								}
+							}
 					}]
 				}],
 			columns: [{
@@ -508,13 +559,39 @@ Ext.define('Ext.app.PasswordPanel', {
 		this.callParent(arguments);
 
 		this.getView().on('refresh', Ext.Function.bind(this.gridViewRefresh, this));
+		Ext.EventManager.on(document, 'keydown', Ext.Function.bind(this.focusFilter, this));
 	},
 
-	/**
+	/*
+	 * Intercept CTRL+F and give focus to our filter text box instead of letting the browser show the regular search
+	 */
+	focusFilter: function(e) {
+		if(e.keyCode === 70 && e.ctrlKey) {
+			e.stopEvent();
+			if (Ext.isIE) {
+				e.browserEvent.keyCode = 0;
+			}
+			this.down('textfield').focus();
+		}
+		return false;
+	},
+
+	/*
+	 * When the text in the filter text box changes, filter the data store
+	 */
+	filterChange: function(cmp, val) {
+		var store = Ext.data.StoreManager.lookup('secretStore');
+		if (val === "") {
+			store.clearFilter();
+		} else {
+			store.filter('title', val);
+		}
+	},
+
+	/*
 	 * When the grid view refreshes, find any copy buttons that are on the grid and set them up with ZeroClipboard
 	 *
 	 * @todo figure out a way to have the Ext QuickTips not messed up by ZeroClipboard
-	 * @param {type} gridView
 	 */
 	gridViewRefresh: function(gridView) {
 		Ext.each(Ext.query('.x-action-col-cell'), function(n) {
