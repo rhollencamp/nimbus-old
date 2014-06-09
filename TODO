@@ -1,0 +1,12 @@
+* After successful login, add some kind of indication / loading mask while redirecting
+* Confirmation popup / processing mask when deleting secret
+* Processing mask while adding new secret
+* Session timeout
+* Default grid sort
+* Remember grid filters / state
+* Password generator
+* Attribution page
+** fuge icons
+** zeroclipboard
+** extjs
+** spring
