@@ -107,9 +107,11 @@ Ext.define('Ext.app.HomePanel', {
 				layout: 'fit',
 				resizable: false,
 				modal: true,
-				items: Ext.create('Ext.app.Register')
+				items: Ext.create('Ext.app.Register'),
+				defaultFocus: 'textfield[name=userName]'
 			});
 		}
+		this.registerWindow.child('form').getForm().reset();
 		this.registerWindow.show();
 	},
 
@@ -121,9 +123,11 @@ Ext.define('Ext.app.HomePanel', {
 				layout: 'fit',
 				resizable: false,
 				modal: true,
-				items: Ext.create('Ext.app.LogIn')
+				items: Ext.create('Ext.app.LogIn'),
+				defaultFocus: 'textfield[name=userName]'
 			});
 		}
+		this.logInWindow.child('form').getForm().reset();
 		this.logInWindow.show();
 	}
 });
