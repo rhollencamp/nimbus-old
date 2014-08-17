@@ -21,10 +21,10 @@
 
 	<!-- security on all other URLs -->
 	<security:http use-expressions="true">
-		<security:intercept-url pattern="/" access="permitAll"/>
-		<security:intercept-url pattern="/favicon.ico" access="permitAll"/>
-		<security:intercept-url pattern="/register" access="permitAll"/>
-		<security:intercept-url pattern="/**" access="isAuthenticated()"/>
+		<security:intercept-url pattern="/" access="permitAll" requires-channel="#{systemProperties['securityChannel']?:'https'}"/>
+		<security:intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="#{systemProperties['securityChannel']?:'https'}"/>
+		<security:intercept-url pattern="/register" access="permitAll" requires-channel="#{systemProperties['securityChannel']?:'https'}"/>
+		<security:intercept-url pattern="/**" access="isAuthenticated()" requires-channel="#{systemProperties['securityChannel']?:'https'}"/>
 		<security:form-login
 			login-page="/"
 			login-processing-url="/authenticate"
