@@ -215,9 +215,9 @@
 				</dependencies>
 				<configuration>
 					<driver>org.hsqldb.jdbc.JDBCDriver</driver>
-					<url>jdbc:hsqldb:file:target/pmdb/pmdb;shutdown=true</url>
-					<username>pmdb</username>
-					<password>pmdb</password>
+					<url>jdbc:hsqldb:file:target/nimbus/nimbus;shutdown=true</url>
+					<username>nimbus</username>
+					<password>nimbus</password>
 					<autocommit>true</autocommit>
 					<srcFiles>
 						<srcFile>src/main/resources/schema.sql</srcFile>

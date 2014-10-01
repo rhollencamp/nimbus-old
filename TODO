@@ -1,6 +1,5 @@
-* After successful login, add some kind of indication / loading mask while redirecting
-* Confirmation popup / processing mask when deleting secret
 * Processing mask while adding new secret
+* Processing mask while editing secret
 * Session timeout
 * Default grid sort
 * Remember grid filters / state

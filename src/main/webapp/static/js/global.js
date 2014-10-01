@@ -233,7 +233,8 @@ Ext.define('Ext.app.LogIn', {
 
 	i18n: {
 		message: {
-			processing: 'Processing...'
+			processing: 'Processing...',
+			redirecting: 'Redirecting...'
 		},
 		error: 'Error',
 		completeForm: 'You must enter all required fields',
@@ -286,6 +287,8 @@ Ext.define('Ext.app.LogIn', {
 	},
 
 	logInSuccess: function(form, action) {
+		this.up('window').close();
+		Ext.getBody().mask(this.i18n.message.redirecting);
 		window.location.href = action.result.url;
 	},
 
@@ -461,8 +464,14 @@ Ext.define('Ext.app.PasswordPanel', {
 			url: 'URL',
 			userName: 'User Name'
 		},
+		message: {
+			processing: 'Processing...',
+			deletePassword: 'Are you sure you want to delete this password?',
+			syncError: 'An error occured syncing your changes'
+		},
 		title: {
 			addPassword: 'Add Password',
+			deletePassword: 'Delete Password',
 			passwords: 'Passwords'
 		},
 		tooltip: {
@@ -556,8 +565,7 @@ Ext.define('Ext.app.PasswordPanel', {
 					},
 					url: 'passwords/list'
 				},
-				autoLoad: true,
-				autoSync: true
+				autoLoad: true
 			})
 		});
 		this.callParent(arguments);
@@ -617,6 +625,9 @@ Ext.define('Ext.app.PasswordPanel', {
 		});
 	},
 
+	/*
+	 * Formatter for the URL column; if it is a valid URL, format it as a link
+	 */
 	formatUrl: function(value) {
 		var ret = value;
 		if (Ext.form.field.VTypes.url(value)) {
@@ -667,6 +678,29 @@ Ext.define('Ext.app.PasswordPanel', {
 	},
 
 	deleteSecret: function(grid, rowIndex, colIndex) {
-		grid.store.removeAt(rowIndex);
+		Ext.MessageBox.confirm(this.i18n.title.deletePassword, this.i18n.message.deletePassword, function(button) {
+			if ('yes' === button) {
+				grid.store.removeAt(rowIndex);
+				this.syncStore();
+			}
+		}, this);
+	},
+	
+	syncStore: function() {
+		var store = Ext.data.StoreManager.lookup('secretStore');
+		var panel = this;
+		panel.mask(this.i18n.message.processing);
+		store.sync({
+			failure: function(batch, options) {
+				Ext.Msg.show({
+					msg: this.i18n.message.syncError,
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			},
+			callback: function() {
+				panel.unmask();
+			}
+		});
 	}
 });
