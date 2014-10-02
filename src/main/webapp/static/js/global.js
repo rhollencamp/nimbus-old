@@ -33,7 +33,8 @@ Ext.define('Ext.ux.ClearableTextField', {
 	initComponent: function() {
 		Ext.apply(this, {
 			triggerCls: 'x-form-clear-trigger',
-			enableKeyEvents: true
+			enableKeyEvents: true,
+			selectOnFocus: true
 		});
 		this.callParent(arguments);
 
