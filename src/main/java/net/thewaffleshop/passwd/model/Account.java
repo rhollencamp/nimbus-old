@@ -13,12 +13,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */package net.thewaffleshop.passwd.model;
+ */
+package net.thewaffleshop.passwd.model;
 
-import java.io.Serializable;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -27,44 +24,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  * @author Robert Hollencamp
  */
-public class Account implements Serializable
+public class Account extends Entity
 {
-	private Long uid;
-
-	@NotNull
-	@Size(min = 5, max = 255)
 	private String userName;
-
-	@Min(1)
 	private Long sessionTimeout;
-
-	@NotNull
-	@Size(min = 60, max = 60)
 	private String passwordHash;
-
-	@NotNull
-	@Size(min = 48, max = 48)
 	private byte[] secretKeyEncrypted;
-
-	@NotNull
-	@Size(min = 8, max = 8)
 	private byte[] secretKeySalt;
-
-	@NotNull
-	@Size(min = 16, max = 16)
 	private byte[] secretKeyIv;
-
-	private long version;
-
-	public Long getUid()
-	{
-		return uid;
-	}
-
-	public void setUid(Long uid)
-	{
-		this.uid = uid;
-	}
 
 	public String getUserName()
 	{
@@ -76,6 +43,14 @@ public class Account implements Serializable
 		this.userName = userName;
 	}
 
+	public Long getSessionTimeout() {
+		return sessionTimeout;
+	}
+
+	public void setSessionTimeout(Long sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
+
 	public String getPasswordHash()
 	{
 		return passwordHash;
@@ -84,16 +59,6 @@ public class Account implements Serializable
 	public void setPasswordHash(String hash)
 	{
 		this.passwordHash = hash;
-	}
-
-	public long getVersion()
-	{
-		return version;
-	}
-
-	public void setVersion(long version)
-	{
-		this.version = version;
 	}
 
 	public byte[] getSecretKeyEncrypted()

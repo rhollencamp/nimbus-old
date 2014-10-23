@@ -18,42 +18,32 @@ package net.thewaffleshop.passwd.model;
 
 
 /**
+ * Contains fields common to all entities
  *
  * @author Robert Hollencamp
  */
-public class Secret extends Entity
+class Entity
 {
-	private Account account;
-	private byte[] encryptedSecret;
-	private byte[] iv;
+	private Long uid;
+	private long version;
 
-	public Account getAccount()
+	public Long getUid()
 	{
-		return account;
+		return uid;
 	}
 
-	public void setAccount(Account account)
+	public void setUid(Long uid)
 	{
-		this.account = account;
+		this.uid = uid;
 	}
 
-	public void setEncryptedSecret(byte[] encryptedSecret)
+	public long getVersion()
 	{
-		this.encryptedSecret = encryptedSecret;
+		return version;
 	}
 
-	public byte[] getEncryptedSecret()
+	public void setVersion(long version)
 	{
-		return encryptedSecret;
-	}
-
-	public byte[] getIv()
-	{
-		return iv;
-	}
-
-	public void setIv(byte[] iv)
-	{
-		this.iv = iv;
+		this.version = version;
 	}
 }

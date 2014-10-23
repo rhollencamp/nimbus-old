@@ -23,7 +23,7 @@
 				<property name="database" value="HSQL"/>
 			</bean>
 		</property>
-		<property name="persistenceUnitName" value="wpm"/>
+		<property name="packagesToScan" value="net.thewaffleshop.passwd.model"/>
 	</bean>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"/>

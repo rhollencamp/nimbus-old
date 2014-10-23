@@ -18,14 +18,24 @@ limitations under the License.
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
 		version="2.0">
-	<entity class="net.thewaffleshop.passwd.model.Account" name="Account" access="PROPERTY">
+
+	<mapped-superclass class="net.thewaffleshop.passwd.model.Entity">
 		<attributes>
 			<id name="uid">
 				<column name="uid" nullable="false" unique="true" updatable="false"/>
 				<generated-value/>
 			</id>
+			<version name="version"/>
+		</attributes>
+	</mapped-superclass>
+
+	<entity class="net.thewaffleshop.passwd.model.Account" name="Account" access="PROPERTY">
+		<attributes>
 			<basic name="userName">
 				<column name="user_name" nullable="false" unique="true" updatable="false"/>
+			</basic>
+			<basic name="sessionTimeout">
+				<column name="session_timeout"/>
 			</basic>
 			<basic name="passwordHash">
 				<column name="password" nullable="false"/>
@@ -39,23 +49,17 @@ limitations under the License.
 			<basic name="secretKeyIv">
 				<column name="secret_key_iv" nullable="false"/>
 			</basic>
-			<version name="version"/>
 		</attributes>
 	</entity>
 
 	<entity class="net.thewaffleshop.passwd.model.Secret" name="Secret" access="PROPERTY">
 		<attributes>
-			<id name="uid">
-				<column name="uid" nullable="false" unique="true" updatable="false"/>
-				<generated-value/>
-			</id>
 			<basic name="encryptedSecret">
 				<column name="encrypted_secret" nullable="false"/>
 			</basic>
 			<basic name="iv">
 				<column name="iv" nullable="false"/>
 			</basic>
-			<version name="version"/>
 			<many-to-one name="account" fetch="LAZY">
 				<join-column name="account_uid" nullable="false" updatable="false"/>
 			</many-to-one>
