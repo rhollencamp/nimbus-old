@@ -20,11 +20,23 @@ limitations under the License.
 		version="2.0">
 
 	<mapped-superclass class="net.thewaffleshop.passwd.model.Entity">
+		<entity-listeners>
+			<entity-listener class="net.thewaffleshop.passwd.model.listener.CreateUpdateListener">
+				<pre-persist method-name="prePersist"/>
+				<pre-update method-name="preUpdate"/>
+			</entity-listener>
+		</entity-listeners>
 		<attributes>
 			<id name="uid">
 				<column name="uid" nullable="false" unique="true" updatable="false"/>
 				<generated-value/>
 			</id>
+			<basic name="created">
+				<column name="created" nullable="false" updatable="false"/>
+			</basic>
+			<basic name="updated">
+				<column name="updated" nullable="false"/>
+			</basic>
 			<version name="version"/>
 		</attributes>
 	</mapped-superclass>

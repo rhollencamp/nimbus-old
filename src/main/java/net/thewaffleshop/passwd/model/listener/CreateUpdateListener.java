@@ -14,58 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.thewaffleshop.passwd.model;
+package net.thewaffleshop.passwd.model.listener;
 
+import java.util.Date;
+import net.thewaffleshop.passwd.model.Entity;
 
 /**
- * Contains fields common to all entities
+ * JPA Entity Listener for maintaining created / updated timestamps
  *
  * @author Robert Hollencamp
  */
-public class Entity
+public class CreateUpdateListener
 {
-	private Long uid;
-	private Long version;
-	private Long created;
-	private Long updated;
-
-	public Long getUid()
+	/**
+	 * When an entity is persisted for the first time, set created and updated timestamps
+	 *
+	 * @param entity
+	 */
+	public void prePersist(Entity entity)
 	{
-		return uid;
+		long timestamp = new Date().getTime();
+		entity.setCreated(timestamp);
+		entity.setUpdated(timestamp);
 	}
 
-	public void setUid(Long uid)
+	/**
+	 * When an entity is updated, set the updated timestamp
+	 *
+	 * @param entity
+	 */
+	public void preUpdate(Entity entity)
 	{
-		this.uid = uid;
-	}
-
-	public Long getVersion()
-	{
-		return version;
-	}
-
-	public void setVersion(Long version)
-	{
-		this.version = version;
-	}
-
-	public Long getCreated()
-	{
-		return created;
-	}
-
-	public void setCreated(Long created)
-	{
-		this.created = created;
-	}
-
-	public Long getUpdated()
-	{
-		return updated;
-	}
-
-	public void setUpdated(Long updated)
-	{
-		this.updated = updated;
+		long timestamp = new Date().getTime();
+		entity.setUpdated(timestamp);
 	}
 }
