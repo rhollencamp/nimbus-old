@@ -209,6 +209,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>**/applicationContext-security.xml</include>
+					<include>**/applicationContext-dao.xml</include>
 				</includes>
 			</resource>
 			<!-- copy all other resources WITHOUT filtering -->
@@ -216,6 +217,7 @@
 				<directory>src/main/resources</directory>
 				<excludes>
 					<exclude>**/applicationContext-security.xml</exclude>
+					<exclude>**/applicationContext-dao.xml</exclude>
 				</excludes>
 			</resource>
 		</resources>
@@ -224,7 +226,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.2</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -234,7 +236,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.5</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
@@ -248,6 +250,7 @@
 
 			<properties>
 				<securityChannel>https</securityChannel>
+				<hibernate.database>POSTGRESQL</hibernate.database>
 			</properties>
 
 			<dependencies>
@@ -265,6 +268,7 @@
 
 			<properties>
 				<securityChannel>http</securityChannel>
+				<hibernate.database>HSQL</hibernate.database>
 			</properties>
 
 			<build>

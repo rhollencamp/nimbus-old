@@ -20,7 +20,7 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="database" value="HSQL"/>
+				<property name="database" value="${hibernate.database}"/>
 			</bean>
 		</property>
 		<property name="packagesToScan" value="net.thewaffleshop.passwd.model"/>
