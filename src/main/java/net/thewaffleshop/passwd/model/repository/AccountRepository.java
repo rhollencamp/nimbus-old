@@ -41,7 +41,7 @@ public class AccountRepository extends BaseRepository<Account>
 	 */
 	public Account findByUserName(String userName)
 	{
-		String hql = "SELECT a FROM Account a WHERE a.userName LIKE :userName";
+		String hql = "SELECT a FROM Account a WHERE a.userName = :userName";
 		List<Account> results = em
 				.createQuery(hql, Account.class)
 				.setParameter("userName", userName)
