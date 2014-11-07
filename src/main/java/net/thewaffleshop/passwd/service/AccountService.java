@@ -40,11 +40,19 @@ public class AccountService
 	@Resource
 	private AccountRepository accountRepository;
 
+	private static final String FOO_BCRYPT = "$2a$10$SmxEATMonGqeN.wL/P/zMeJVHQiYkKMzhXJP6nqlS.M6zeKKcgt/O";
+
 	@Transactional(readOnly = true)
 	public Account authenticateUser(String userName, String password) throws AuthenticationException
 	{
 		Account account = accountRepository.findByUserName(userName);
 		if (account == null) {
+			// checking password takes a significant amount of time, so perform the check anyways to make this request about as
+			// long as if an account did exist; this prevents timing attacks
+			Account tmp = new Account();
+			tmp.setPasswordHash(FOO_BCRYPT);
+			accountAPI.checkPassword(tmp, "BAR");
+
 			throw new UsernameNotFoundException("Authentication failed; check your username and password");
 		}
 		if (!accountAPI.checkPassword(account, password)) {
