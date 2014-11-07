@@ -348,6 +348,7 @@ Ext.define('Ext.app.EditSecret', {
 		},
 		message: {
 			completeForm: 'Please complete the form',
+			processing: 'Processing...',
 			unexpectedError: 'An unexpected error occured'
 		}
 	},
@@ -415,6 +416,7 @@ Ext.define('Ext.app.EditSecret', {
 		var form = this.getForm();
 		if (form.isValid()) {
 			this.getForm().submit({
+				waitMsg: this.i18n.message.processing,
 				jsonSubmit: true,
 				success: Ext.Function.bind(this.saveSuccess, this),
 				failure: Ext.Function.bind(this.saveFailure, this)
@@ -689,8 +691,7 @@ Ext.define('Ext.app.PasswordPanel', {
 	
 	syncStore: function() {
 		var store = Ext.data.StoreManager.lookup('secretStore');
-		var panel = this;
-		panel.mask(this.i18n.message.processing);
+		Ext.MessageBox.wait(this.i18n.message.processing);
 		store.sync({
 			failure: function(batch, options) {
 				Ext.Msg.show({
@@ -700,7 +701,7 @@ Ext.define('Ext.app.PasswordPanel', {
 				});
 			},
 			callback: function() {
-				panel.unmask();
+				Ext.MessageBox.hide();
 			}
 		});
 	}
