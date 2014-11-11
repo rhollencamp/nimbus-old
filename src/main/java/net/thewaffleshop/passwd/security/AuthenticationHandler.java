@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -63,7 +63,7 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");
-		response.getWriter().write("{\"success\": true, \"url\": \"" + StringEscapeUtils.escapeJavaScript(url) + "\"}");
+		response.getWriter().write("{\"success\": true, \"url\": \"" + StringEscapeUtils.escapeJson(url) + "\"}");
 	}
 
 	/**
@@ -82,6 +82,6 @@ public class AuthenticationHandler implements AuthenticationSuccessHandler, Auth
 
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType("application/json");
-		response.getWriter().write("{\"success\": false, \"msg\": \"" + StringEscapeUtils.escapeJavaScript(msg) + "\"}");
+		response.getWriter().write("{\"success\": false, \"msg\": \"" + StringEscapeUtils.escapeJson(msg) + "\"}");
 	}
 }
