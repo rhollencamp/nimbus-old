@@ -343,8 +343,7 @@ Ext.define('Ext.app.EditSecret', {
 			note: 'Note'
 		},
 		button: {
-			save: 'Save',
-			showPassword: 'Show Password'
+			save: 'Save'
 		},
 		message: {
 			completeForm: 'Please complete the form',
@@ -361,7 +360,8 @@ Ext.define('Ext.app.EditSecret', {
 			url: 'passwords/save',
 			fieldDefaults: {
 				msgTarget: 'under',
-				allowBlank: false
+				allowBlank: false,
+				anchor: '100%'
 			},
 			items: [{
 					xtype: 'hidden',
@@ -386,23 +386,17 @@ Ext.define('Ext.app.EditSecret', {
 					maxLength: 255
 				}, {
 					fieldLabel: this.i18n.field.password,
-					xtype: 'fieldcontainer',
-					items: [{
-							xtype: 'textfield',
-							name: 'password'
-						}, {
-							xtype: 'button',
-							name: 'showPassword',
-							text: this.i18n.button.showPassword,
-							hidden: true,
-							handler: Ext.Function.bind(this.showPassword, this)
-						}]
+					xtype: 'textfield',
+					name: 'password',
+					minLength: 1,
+					maxLength: 255
 				}, {
 					fieldLabel: this.i18n.field.note,
 					xtype: 'textareafield',
 					name: 'note',
 					allowBlank: true,
-					maxLength: 2048
+					maxLength: 2048,
+					anchor: '100% -119'
 				}],
 			buttons: [{
 					text: this.i18n.button.save,
@@ -446,11 +440,6 @@ Ext.define('Ext.app.EditSecret', {
 			buttons: Ext.Msg.OK,
 			icon: Ext.Msg.ERROR
 		});
-	},
-
-	showPassword: function() {
-		this.down('textfield[name=password]').show();
-		this.down('button').hide();
 	}
 });
 
@@ -645,7 +634,7 @@ Ext.define('Ext.app.PasswordPanel', {
 				title: this.i18n.title.addPassword,
 				closeAction: 'hide',
 				layout: 'fit',
-				resizable: false,
+				resizable: true,
 				modal: true,
 				items: Ext.create('Ext.app.EditSecret')
 			});
@@ -658,10 +647,7 @@ Ext.define('Ext.app.PasswordPanel', {
 		var w = this.getEditSecretWindow();
 		var f = w.child('form');
 
-		f.down('textfield[name=password]').hide();
-		f.down('button').show();
 		f.getForm().loadRecord(r);
-
 		w.show();
 	},
 
@@ -673,10 +659,7 @@ Ext.define('Ext.app.PasswordPanel', {
 		var w = this.getEditSecretWindow();
 		var f = w.child('form');
 
-		f.down('textfield[name=password]').show();
-		f.down('button').hide();
 		f.getForm().reset();
-
 		w.show();
 	},
 
@@ -688,7 +671,7 @@ Ext.define('Ext.app.PasswordPanel', {
 			}
 		}, this);
 	},
-	
+
 	syncStore: function() {
 		var store = Ext.data.StoreManager.lookup('secretStore');
 		Ext.MessageBox.wait(this.i18n.message.processing);
